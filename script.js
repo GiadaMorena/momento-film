@@ -139,8 +139,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 const movieState = appState.movies[movie.id] || {};
                 const card = document.createElement('div');
                 card.className = 'movie-card';
-                card.style.opacity = 0;
-                card.style.transform = 'translateY(20px)';
+
+                // CORREZIONE: Rimosse le righe che rendevano le card invisibili
+                // card.style.opacity = 0;
+                // card.style.transform = 'translateY(20px)';
 
                 card.innerHTML = `
                     <div class="movie-title">${movie.title} (${movie.year})</div>
@@ -165,20 +167,21 @@ document.addEventListener('DOMContentLoaded', () => {
             filmContainer.appendChild(categorySection);
         }
 
-        // Animazione con Framer Motion
+        // CORREZIONE: Disattivata l'animazione Framer Motion per garantire la visibilità
+        /*
         const motion = window.motion; 
         if (motion && typeof motion.stagger === 'function') {
             motion.stagger(0.05, [
                 motion.animate(".movie-card", { opacity: 1, y: 0 }, { duration: 0.5, ease: "easeOut" })
             ]);
         } else {
-            // Fallback se Framer Motion non carica o per browser vecchi
             document.querySelectorAll('.movie-card').forEach(card => {
                 card.style.opacity = 1;
                 card.style.transform = 'none';
                 card.style.transition = 'opacity 0.5s, transform 0.5s';
             });
         }
+        */
     }
 
     function updateProgress() {
@@ -270,7 +273,7 @@ document.addEventListener('DOMContentLoaded', () => {
             appState.movies[movieId] = state;
             saveState();
             closeModal();
-        }, { once: true }); // L'evento viene rimosso dopo il primo click
+        }, { once: true });
     }
 
     function closeModal() {
