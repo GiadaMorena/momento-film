@@ -32,7 +32,7 @@ body.light-mode {
 
 /* --- Header --- */
 header {
-    background-image: linear-gradient(rgba(13, 27, 42, 0.8), rgba(13, 27, 42, 0.6)), url('https://i.imgur.com/gK1qL8j.jpg'); /* Immagine di sfondo a tema */
+background-image: linear-gradient(rgba(13, 27, 42, 0.8), rgba(13, 27, 42, 0.6)), url('images/header-bg.jpg');
     background-size: cover;
     background-position: center;
     text-align: center;
