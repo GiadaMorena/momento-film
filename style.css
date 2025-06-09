@@ -4,8 +4,9 @@
     --dark-card: #1b263b;
     --dark-primary-text: #e0e1dd;
     --dark-secondary-text: #a8b2d1;
-    --accent-color: #415a77;
-    --accent-hover: #778da9;
+    --accent-color: #3d5a80; /* Blu più deciso per i pulsanti */
+    --accent-hover: #5a7d9a;
+    --accent-gold: #fca311;
     --star-color: #ffc300;
     --success-color: #2a9d8f;
 
@@ -15,124 +16,96 @@
     --light-secondary-text: #415a77;
 }
 
-body {
-    font-family: 'Lato', sans-serif;
-    margin: 0;
-    transition: background-color 0.3s, color 0.3s;
-}
-
+body { font-family: 'Lato', sans-serif; margin: 0; transition: background-color 0.3s, color 0.3s; }
 body.dark-mode { background-color: var(--dark-bg); color: var(--dark-primary-text); }
 body.light-mode { background-color: var(--light-bg); color: var(--light-primary-text); }
 
 /* --- Header --- */
-header {
-    background-image: linear-gradient(rgba(13, 27, 42, 0.8), rgba(13, 27, 42, 0.6)), url('images/header-bg.jpg');
-    background-size: cover;
-    background-position: center;
-    text-align: center;
-    padding: 4rem 1rem;
-    color: white;
-    position: relative;
-    border-bottom: 3px solid var(--accent-hover);
-}
+header { background-image: linear-gradient(rgba(13, 27, 42, 0.8), rgba(13, 27, 42, 0.6)), url('images/header-bg.jpg'); background-size: cover; background-position: center; text-align: center; padding: 4rem 1rem; color: white; position: relative; border-bottom: 3px solid var(--accent-hover); }
 header h1 { font-family: 'Cinzel', serif; font-size: 3.5rem; margin: 0; text-shadow: 2px 2px 8px rgba(0,0,0,0.7); }
-
-.theme-toggle-btn {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    background: none;
-    border: 2px solid white;
-    color: white;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    cursor: pointer;
-    font-size: 1.2rem;
-    transition: all 0.3s ease;
-}
+.theme-toggle-btn { position: absolute; top: 20px; right: 20px; background: none; border: 2px solid white; color: white; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 1.2rem; transition: all 0.3s ease; }
 .theme-toggle-btn:hover { background-color: rgba(255, 255, 255, 0.2); transform: scale(1.1) rotate(15deg); }
 
-/* --- Dashboard Statistiche con Animazioni --- */
-.stats-dashboard {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem;
-    max-width: 800px;
-    margin: 2rem auto;
-    padding: 1.5rem;
-    background-color: var(--dark-card);
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-}
+/* --- Dashboard Statistiche --- */
+.stats-dashboard { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; max-width: 900px; margin: 2rem auto; padding: 1.5rem; background-color: var(--dark-card); border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
 body.light-mode .stats-dashboard { background-color: var(--light-card); }
 .stat-card { text-align: center; }
-.stat-number {
-    font-size: 2.5rem;
-    font-weight: 700;
-    font-family: 'Cinzel', serif;
-    color: var(--accent-hover);
-    transition: color 0.3s ease;
-}
+.stat-number { font-size: 2.5rem; font-weight: 700; font-family: 'Cinzel', serif; color: var(--accent-hover); transition: color 0.3s ease; }
 .stat-card:hover .stat-number { color: var(--star-color); }
 body.light-mode .stat-number { color: var(--accent-color); }
 .stat-label { font-size: 1rem; color: var(--dark-secondary-text); margin-top: 0.5rem; }
 
-/* --- Barra Azioni --- */
-.actions-toolbar { max-width: 800px; margin: -1rem auto 2rem auto; text-align: center; padding: 1rem; background-color: var(--dark-card); border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-body.light-mode .actions-toolbar { background-color: var(--light-card); }
-.action-btn {
-    background-color: var(--accent-color);
-    color: white;
+/* --- NUOVA BARRA DI RICERCA E FILTRI --- */
+.filter-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+    max-width: 900px;
+    margin: -1rem auto 2rem auto;
+    padding: 1rem;
+    background: var(--dark-card);
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+body.light-mode .filter-toolbar { background: var(--light-card); }
+
+.input-wrapper {
+    position: relative;
+    flex-grow: 1;
+}
+.input-wrapper i {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--dark-secondary-text);
+}
+.filter-toolbar input, .filter-toolbar select {
+    width: 100%;
+    padding: 12px 15px 12px 40px; /* Spazio per l'icona */
+    border-radius: 25px;
+    border: 2px solid var(--accent-color);
+    background-color: var(--dark-bg);
+    color: var(--dark-primary-text);
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+body.light-mode .filter-toolbar input, body.light-mode .filter-toolbar select { background-color: var(--light-bg); color: var(--light-primary-text); }
+.filter-toolbar input::placeholder { color: var(--dark-secondary-text); }
+
+.toolbar-btn {
+    padding: 12px 20px;
     border: none;
-    padding: 10px 20px;
-    border-radius: 8px;
+    border-radius: 25px;
     cursor: pointer;
     font-size: 1rem;
-    transition: all 0.3s ease;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
-.action-btn:hover { background-color: var(--accent-hover); transform: scale(1.05); }
+.toolbar-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+.toolbar-btn.primary { background-color: var(--accent-color); color: white; }
+.toolbar-btn.primary:hover { background-color: var(--accent-hover); }
+.toolbar-btn.secondary { background-color: var(--dark-bg); color: var(--dark-secondary-text); border: 2px solid var(--accent-color); }
+.toolbar-btn.secondary:hover { background-color: var(--accent-color); color: white; }
+.toolbar-btn.accent { background-color: var(--accent-gold); color: #14213d; }
+.toolbar-btn.accent:hover { filter: brightness(1.1); }
 
-/* --- Contenitore Film --- */
+/* --- Catalogo Film (invariato) --- */
 #film-container { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
 .film-category h2 { font-family: 'Cinzel', serif; border-bottom: 2px solid var(--accent-color); padding-bottom: 0.5rem; margin-bottom: 1.5rem; }
 .film-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
-
-/* --- Card del Film con Animazioni --- */
-.movie-card {
-    background-color: var(--dark-card);
-    border-radius: 12px;
-    padding: 1.5rem;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    display: flex;
-    flex-direction: column;
-    border: 2px solid transparent;
-}
+.movie-card { background-color: var(--dark-card); border-radius: 12px; padding: 1.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: transform 0.3s ease, box-shadow 0.3s ease; display: flex; flex-direction: column; border: 2px solid transparent; }
 body.light-mode .movie-card { background-color: var(--light-card); }
-.movie-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.4), 0 0 15px var(--accent-hover);
-}
+.movie-card:hover { transform: translateY(-8px); box-shadow: 0 10px 30px rgba(0,0,0,0.4), 0 0 15px var(--accent-hover); }
 .movie-title { font-size: 1.2rem; font-weight: bold; margin-bottom: 1rem; flex-grow: 1; }
-
-/* Checkbox Unificata con Stile Migliorato */
 .checkbox-container { display: flex; justify-content: center; margin-bottom: 1rem; }
-.checkbox-label {
-    cursor: pointer;
-    font-size: 1rem;
-    transition: color 0.3s ease, font-weight 0.3s ease;
-}
-.checkbox-label input {
-    margin-right: 8px;
-    transform: scale(1.2);
-    accent-color: var(--success-color); /* Colora la checkbox quando spuntata */
-}
-.checkbox-label input:checked + span {
-    color: var(--success-color);
-    font-weight: bold;
-}
-
+.checkbox-label { cursor: pointer; font-size: 1rem; transition: color 0.3s ease, font-weight 0.3s ease; }
+.checkbox-label input { margin-right: 8px; transform: scale(1.2); accent-color: var(--success-color); }
+.checkbox-label input:checked + span { color: var(--success-color); font-weight: bold; }
 .movie-actions { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--accent-color); padding-top: 1rem; margin-top: auto; }
 .fav-btn { background: none; border: none; color: var(--dark-secondary-text); font-size: 1.5rem; cursor: pointer; transition: color 0.2s, transform 0.2s; }
 .fav-btn.favorited { color: var(--star-color); transform: scale(1.3); }
@@ -141,20 +114,17 @@ body.light-mode .movie-card { background-color: var(--light-card); }
 body.light-mode .details-btn { color: var(--light-secondary-text); border-color: var(--light-secondary-text); }
 .details-btn:hover { background-color: var(--accent-color); color: white; transform: scale(1.05); }
 
-/* --- Scroll-to-top e Modale (con animazione migliorata) --- */
+/* --- Modale e Scroll-to-Top (invariati) --- */
 #scroll-to-top { position: fixed; bottom: 20px; right: 20px; width: 50px; height: 50px; background-color: var(--accent-color); color: white; border-radius: 50%; text-align: center; line-height: 50px; font-size: 1.5rem; display: none; transition: opacity 0.3s, transform 0.3s; z-index: 1000; }
-#scroll-to-top:hover { background-color: var(--accent-hover); transform: scale(1.1); }
 .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.7); }
 .modal-content { background-color: var(--dark-card); margin: 10% auto; padding: 20px; border: 1px solid #888; width: 80%; max-width: 600px; border-radius: 12px; position: relative; animation: modal-enter 0.4s ease-out; }
-body.light-mode .modal-content { background-color: var(--light-card); }
 @keyframes modal-enter { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
 .close-btn { color: #aaa; position: absolute; top: 10px; right: 20px; font-size: 28px; font-weight: bold; cursor: pointer; transition: color 0.2s, transform 0.2s; }
-.close-btn:hover { color: white; transform: rotate(90deg); }
-#modal-body h3 { font-family: 'Cinzel', serif; }
-#modal-body textarea, #modal-body input[type="number"] { width: 95%; padding: 10px; margin-top: 10px; border-radius: 5px; border: 1px solid var(--accent-color); background-color: var(--dark-bg); color: var(--dark-primary-text); }
-body.light-mode #modal-body textarea, body.light-mode #modal-body input[type="number"] { background-color: var(--light-bg); color: var(--light-primary-text); }
 
 /* --- Responsive --- */
+@media (max-width: 920px) {
+    .filter-toolbar { flex-direction: column; align-items: stretch; }
+}
 @media (max-width: 768px) {
     header h1 { font-size: 2.5rem; }
     .film-grid { grid-template-columns: 1fr; }

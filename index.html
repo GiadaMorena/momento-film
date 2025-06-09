@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 
@@ -40,9 +40,22 @@
             </div>
         </section>
 
-        <div class="actions-toolbar">
-             <button id="export-btn" class="action-btn"><i class="fas fa-download"></i> Esporta Visti</button>
-        </div>
+        <!-- NUOVA BARRA DI RICERCA E FILTRI -->
+        <section class="filter-toolbar">
+            <div class="input-wrapper">
+                <i class="fas fa-search"></i>
+                <input type="text" id="search-input" placeholder="Cerca il tuo prossimo film...">
+            </div>
+            <div class="input-wrapper">
+                <i class="fas fa-filter"></i>
+                <select id="category-filter">
+                    <!-- Le opzioni verranno aggiunte da JS -->
+                </select>
+            </div>
+            <button id="mark-all-seen-btn" class="toolbar-btn primary"><i class="fas fa-check-double"></i> Segna Visti</button>
+            <button id="reset-all-btn" class="toolbar-btn secondary"><i class="fas fa-sync-alt"></i> Nuovo Inizio</button>
+            <button id="export-btn" class="toolbar-btn accent"><i class="fas fa-download"></i> Esporta Dati</button>
+        </section>
 
         <div id="film-container">
             <!-- Il catalogo dei film verrà generato qui -->
