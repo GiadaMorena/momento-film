@@ -125,6 +125,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         filmContainer.innerHTML = ''; 
 
+        console.log(`Trovato il contenitore film. Sto per renderizzare ${filmList.length} film.`);
+
         for (const category in groupedMovies) {
             const categorySection = document.createElement('section');
             categorySection.className = 'film-category';
