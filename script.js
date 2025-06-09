@@ -1,3 +1,5 @@
+// --- START OF FILE script.js ---
+
 document.addEventListener('DOMContentLoaded', () => {
     // --- 1. DATI DEI FILM ---
     const filmList = [
@@ -122,18 +124,40 @@ document.addEventListener('DOMContentLoaded', () => {
         window.requestAnimationFrame(step);
     }
     
+    // ==========================================================
+    // --- FUNZIONE CORRETTA ---
+    // ==========================================================
     function updateStatsDashboard(isInitialLoad = false) {
         const seenCounterEl = document.getElementById('stats-seen-count');
         const favCounterEl = document.getElementById('stats-favorite-count');
         const completionEl = document.getElementById('stats-completion-percentage');
         
+        // Denominatore: Corretto, conta solo i film la cui categoria include "Anni"
         const totalCanonicalMovies = filmList.filter(f => f.category.includes("Anni")).length;
+        
         let seenCount = 0;
         let favoriteCount = 0;
-        Object.values(appState.movies).forEach(state => {
-            if (state.seen) seenCount++;
-            if (state.favorite) favoriteCount++;
-        });
+
+        // Itera sugli ID dei film registrati nello stato
+        for (const id in appState.movies) {
+            const state = appState.movies[id];
+            
+            // Il contatore dei preferiti può includere tutti i film
+            if (state.favorite) {
+                favoriteCount++;
+            }
+
+            // Per il contatore dei "Visti", controlliamo che il film sia canonico
+            if (state.seen) {
+                // Troviamo il film corrispondente nella lista principale
+                const movie = filmList.find(m => m.id == id);
+                // Incrementiamo il contatore solo se il film esiste e la sua categoria è tra quelle canoniche
+                if (movie && movie.category.includes("Anni")) {
+                    seenCount++;
+                }
+            }
+        }
+        
         const completionPercentage = totalCanonicalMovies > 0 ? (seenCount / totalCanonicalMovies) * 100 : 0;
 
         if (isInitialLoad || !document.hidden) {
