@@ -1,5 +1,5 @@
 /* =================================================================== */
-/* ==   🎨 IMPOSTAZIONI GLOBALI E NUOVA PALETTE COLORI   == */
+/* ==   🎨 IMPOSTAZIONI GLOBALI E PALETTE COLORI COMPLETA   == */
 /* =================================================================== */
 :root {
     /* -- Palette Originale -- */
@@ -48,7 +48,40 @@ body.light-mode {
 
 
 /* =================================================================== */
-/* ==   ✨ COMPONENTI DELL'INTERFACCIA   == */
+/* ==   🎬 KEYFRAMES PER ANIMAZIONI GLOBALI   == */
+/* =================================================================== */
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes modalEnter {
+    from {
+        opacity: 0;
+        transform: translateY(-25px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes animate-gradient-border {
+  to {
+    background-position-x: 100%;
+  }
+}
+
+
+/* =================================================================== */
+/* ==   ✨ COMPONENTI DELL'INTERFACCIA E STILI BASE   == */
 /* =================================================================== */
 
 /* --- Header --- */
@@ -59,8 +92,8 @@ header {
     text-align: center;
     padding: 4rem 1rem;
     color: white;
-    position: relative;
-    border-bottom: 3px solid var(--accent-hover);
+    position: relative; /* Necessario per il bordo animato */
+    border-bottom: 3px solid transparent; /* Sostituisce il bordo statico */
 }
 header h1 {
     font-family: 'Cinzel', serif;
@@ -179,9 +212,10 @@ body.light-mode .filter-toolbar input, body.light-mode .filter-toolbar select {
 }
 .film-category h2 {
     font-family: 'Cinzel', serif;
-    border-bottom: 2px solid var(--accent-color);
     padding-bottom: 0.5rem;
     margin-bottom: 1.5rem;
+    position: relative; /* Necessario per il bordo animato */
+    border-bottom: 2px solid transparent; /* Sostituisce il bordo statico */
 }
 .film-grid {
     display: grid;
@@ -245,7 +279,11 @@ body.light-mode .details-btn {
     border-color: var(--light-secondary-text);
 }
 
-/* --- Modale e Scroll-to-Top (Originali) --- */
+
+/* =================================================================== */
+/* ==   🔮 MODALE, PULSANTI FLUTTUANTI E ALTRI COMPONENTI   == */
+/* =================================================================== */
+
 #scroll-to-top {
     position: fixed;
     bottom: 20px;
@@ -270,14 +308,13 @@ body.light-mode .details-btn {
     height: 100%;
     overflow: auto;
     background-color: rgba(0,0,0,0.7);
-    /* Miglioriamo il centraggio */
     align-items: center;
     justify-content: center;
     padding: 1rem;
 }
 .modal-content {
     background-color: var(--dark-card);
-    margin: 10% auto;
+    margin: auto;
     padding: 20px;
     border: 1px solid #888;
     width: 80%;
@@ -295,64 +332,35 @@ body.light-mode .details-btn {
     cursor: pointer;
     transition: color 0.2s, transform 0.2s;
 }
-
-/* --- Responsive (Originale) --- */
-@media (max-width: 920px) {
-    .filter-toolbar { flex-direction: column; align-items: stretch; }
-}
-@media (max-width: 768px) {
-    header h1 { font-size: 2.5rem; }
-    .film-grid { grid-template-columns: 1fr; }
-    .stats-dashboard { grid-template-columns: 1fr; gap: 1rem; }
-    .stat-number { font-size: 2rem; }
-}
-
-/* =================================================================== */
-/* ==   🎬 KEYFRAMES PER ANIMAZIONI GLOBALI (NUOVO)   == */
-/* =================================================================== */
-
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-@keyframes scaleIn {
-    from {
-        opacity: 0;
-        transform: scale(0.95);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
-@keyframes modalEnter {
-    from {
-        opacity: 0;
-        transform: translateY(-25px) scale(0.98);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
+#save-modal-btn {
+    width: 100%;
+    padding: 12px;
+    font-size: 1.1rem;
+    margin-top: 1rem;
+    background-color: var(--success-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    letter-spacing: 0.5px;
 }
 
 
 /* =================================================================== */
-/* ==   ✨ STILI PER ANIMAZIONI E INTERAZIONI (NUOVO)   == */
+/* ==   🚀 ANIMAZIONI, TRANSIZIONI E INTERAZIONI   == */
 /* =================================================================== */
 
-/* --- 1. Fade-in per Elementi Generali --- */
+/* --- Animazioni di entrata --- */
 .stat-card,
 .film-category h2,
 .movie-card,
 .filter-toolbar {
     animation: scaleIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-    opacity: 0; 
+    opacity: 0;
 }
 
-/* --- 2. Hover-Lift e Transizioni per le Card --- */
+/* --- Hover-Lift e Transizioni per le Card --- */
 .movie-card, .stat-card {
     transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
 }
@@ -368,17 +376,20 @@ body.light-mode .movie-card:hover {
     box-shadow: 0 12px 25px rgba(var(--dark-blue-glow), 0.15), 0 0 15px rgba(var(--magic-purple-rgb), 0.3);
 }
 
-/* --- 3. Interazioni per Pulsanti e Controlli --- */
-.toolbar-btn, .details-btn, #scroll-to-top, .theme-toggle-btn, .action-btn {
+/* --- Interazioni per Pulsanti e Controlli --- */
+.toolbar-btn, .details-btn, #scroll-to-top, .theme-toggle-btn, .action-btn, #save-modal-btn {
     transition: transform 0.2s ease-out, background-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease, filter 0.2s ease;
 }
-.toolbar-btn:hover, .details-btn:hover {
+.toolbar-btn:hover, .details-btn:hover, #save-modal-btn:hover {
     transform: translateY(-3px);
     box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
 .details-btn:hover {
     background-color: var(--accent-color);
     color: white;
+}
+#save-modal-btn:hover {
+    filter: brightness(1.1);
 }
 .fav-btn {
     color: var(--dark-secondary-text);
@@ -415,7 +426,7 @@ body.light-mode .movie-card:hover {
     transform: scale(1.15) rotate(20deg);
 }
 
-/* --- 4. Glow-on-Focus per Form e Input --- */
+/* --- Glow-on-Focus per Form e Input --- */
 input, textarea, select {
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
@@ -424,7 +435,7 @@ input:focus, textarea:focus, select:focus, button:focus-visible {
     border-color: var(--info-color);
     box-shadow: 0 0 0 3px rgba(var(--info-color-rgb), 0.5);
 }
-input:focus + i {
+.input-wrapper:focus-within i {
     color: var(--info-color);
 }
 .checkbox-label input[type="checkbox"] {
@@ -439,7 +450,7 @@ input:focus + i {
      border-radius: 3px;
 }
 
-/* --- 5. Animazione per la Modale --- */
+/* --- Animazione per la Modale --- */
 .modal-content {
     animation: modalEnter 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
@@ -448,22 +459,58 @@ input:focus + i {
     transform: scale(1.2);
 }
 
-/* --- Pulsante Salva nella Modale (aggiunto per coerenza) --- */
-#save-modal-btn {
-    width: 100%;
-    padding: 12px;
-    font-size: 1.1rem;
-    margin-top: 1rem;
-    background-color: var(--success-color);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: bold;
-    letter-spacing: 0.5px;
+
+/* =================================================================== */
+/* ==   🌈 BORDO GRADIENTE ANIMATO   == */
+/* =================================================================== */
+header::after,
+.film-category h2::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -1px; /* Posizionamento preciso sotto il contenuto */
+  width: 100%;
+  background: linear-gradient(
+    90deg,
+    #ff9900, 
+    #ff2d55, 
+    #9d4edd, 
+    #4cc9f0, 
+    #00ff95, 
+    #ff9900
+  );
+  background-size: 400%;
+  animation: animate-gradient-border 15s linear infinite;
 }
-#save-modal-btn:hover {
-    filter: brightness(1.1);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+header::after {
+  height: 3px;
+}
+.film-category h2::after {
+  height: 2px;
+}
+
+
+/* =================================================================== */
+/* ==   📱 STILI RESPONSIVE   == */
+/* =================================================================== */
+@media (max-width: 920px) {
+    .filter-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 2.5rem;
+    }
+    .film-grid {
+        grid-template-columns: 1fr;
+    }
+    .stats-dashboard {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    .stat-number {
+        font-size: 2rem;
+    }
 }
