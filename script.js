@@ -358,4 +358,11 @@ document.addEventListener('DOMContentLoaded', () => {
     loadState();
     renderMovies();
     updateProgress();
-});
+    console.log("Inizializzazione script..."); // <-- LOG 1
+    loadState();
+    console.log("Stato caricato. Inizio rendering film..."); // <-- LOG 2
+    renderMovies();
+    console.log("Film renderizzati. Aggiorno progressi..."); // <-- LOG 3
+    updateProgress();
+    console.log("Script inizializzato con successo."); // <-- LOG 4
+    });
