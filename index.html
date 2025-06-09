@@ -4,22 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Momento Film | La Nostra Lista Disney</title>
-    
-    <!-- Collegamento al foglio di stile CSS -->
     <link rel="stylesheet" href="style.css">
-    
-    <!-- Caricamento dei font da Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400&display=swap" rel="stylesheet">
-    
-    <!-- Libreria di icone (Font Awesome) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 
 <body class="dark-mode">
 
-    <!-- Header della pagina -->
     <header>
         <div class="header-content">
             <h1>Momento Film</h1>
@@ -30,61 +23,48 @@
         </button>
     </header>
 
-    <!-- Contenuto principale della pagina -->
     <main>
         
-        <!-- Sezione per le barre di progresso -->
-        <section class="progress-section">
-            <h2>I Nostri Progressi</h2>
-            <div class="progress-container">
-                <label>Maria:</label>
-                <div class="progress-bar-bg">
-                    <div id="progress-maria" class="progress-bar"></div>
-                </div>
-                <span id="percent-maria">0%</span>
+        <!-- NUOVA DASHBOARD DELLE STATISTICHE -->
+        <section class="stats-dashboard">
+            <div class="stat-card">
+                <span id="stats-seen-count" class="stat-number">0</span>
+                <div class="stat-label">🎬 Momenti vissuti</div>
             </div>
-            <div class="progress-container">
-                <label>Giada:</label>
-                <div class="progress-bar-bg">
-                    <div id="progress-giada" class="progress-bar"></div>
-                </div>
-                <span id="percent-giada">0%</span>
+            <div class="stat-card">
+                <span id="stats-favorite-count" class="stat-number">0</span>
+                <div class="stat-label">⭐ Top momenti</div>
+            </div>
+            <div class="stat-card">
+                <span id="stats-completion-percentage" class="stat-number">0.0%</span>
+                <div class="stat-label">🎯 Il nostro viaggio</div>
             </div>
         </section>
 
-        <!-- Barra degli strumenti con le azioni (es. Esporta) -->
         <div class="actions-toolbar">
              <button id="export-btn" class="action-btn"><i class="fas fa-download"></i> Esporta Visti</button>
         </div>
 
-        <!-- Contenitore principale dove verranno inseriti i film da JavaScript -->
         <div id="film-container">
-            <!-- Il catalogo dei film verrà generato e inserito qui dallo script -->
+            <!-- Il catalogo dei film verrà generato qui -->
         </div>
 
     </main>
 
-    <!-- Bottone per tornare in cima alla pagina (appare con lo scroll) -->
     <a href="#" id="scroll-to-top" class="scroll-to-top-btn" aria-label="Torna in cima">
         <i class="fas fa-arrow-up"></i>
     </a>
 
-    <!-- Modale (finestra pop-up) per i dettagli del film -->
     <div id="movie-modal" class="modal">
         <div class="modal-content">
             <span class="close-btn">×</span>
             <div id="modal-body">
-                <!-- I dettagli del film verranno caricati qui dallo script -->
+                <!-- Dettagli caricati qui -->
             </div>
         </div>
     </div>
 
-    <!-- Script esterni (vanno alla fine per performance migliori) -->
-
-    <!-- Libreria per animazioni (Framer Motion) - La lasciamo per il futuro, ma non la usiamo attivamente -->
     <script src="https://cdn.jsdelivr.net/npm/framer-motion@10/dist/framer-motion.umd.js"></script>
-    
-    <!-- Il nostro script JavaScript personalizzato -->
     <script src="script.js"></script>
     
 </body>
