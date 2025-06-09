@@ -1,5 +1,3 @@
-// --- START OF FILE script.js ---
-
 document.addEventListener('DOMContentLoaded', () => {
     // --- 1. DATI DEI FILM ---
     const filmList = [
@@ -9,7 +7,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let appState = { theme: 'dark', movies: {} };
     let currentlyVisibleFilmIds = [];
 
-    // --- SELETTORI DEL DOM ---
     const filmContainer = document.getElementById('film-container');
     const themeToggleBtn = document.getElementById('theme-toggle');
     const scrollToTopBtn = document.getElementById('scroll-to-top');
@@ -21,20 +18,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const markAllSeenBtn = document.getElementById('mark-all-seen-btn');
     const resetAllBtn = document.getElementById('reset-all-btn');
 
-    // --- FUNZIONI PRINCIPALI ---
     function loadState() {
         const savedState = localStorage.getItem('momentoFilmState');
         if (savedState) {
             appState = JSON.parse(savedState);
-            // Script di migrazione per convertire vecchi dati
-            Object.keys(appState.movies).forEach(id => {
-                const movie = appState.movies[id];
-                if (movie.hasOwnProperty('seenMaria') || movie.hasOwnProperty('seenGiada')) {
-                    movie.seen = movie.seenMaria || movie.seenGiada;
-                    delete movie.seenMaria;
-                    delete movie.seenGiada;
-                }
-            });
         }
         document.body.className = `${appState.theme || 'dark'}-mode`;
         updateThemeIcon();
@@ -44,23 +31,62 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('momentoFilmState', JSON.stringify(appState));
     }
 
+    function generateRatingStars(rating) {
+        let starsHTML = '';
+        const numRating = parseFloat(rating);
+        if (isNaN(numRating) || numRating < 0.5) return 'Nessun voto';
+
+        for (let i = 1; i <= 5; i++) {
+            if (numRating >= i) {
+                starsHTML += '<i class="fas fa-star"></i>';
+            } else if (numRating >= i - 0.5) {
+                starsHTML += '<i class="fas fa-star-half-alt"></i>';
+            } else {
+                starsHTML += '<i class="far fa-star"></i>';
+            }
+        }
+        return starsHTML;
+    }
+    
+    function getSeenDetailsHTML(movieState) {
+        return `
+            <div class="card-body">
+                <div class="info-row">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Visto il ${movieState.dateSeen || 'N/D'}</span>
+                </div>
+                <div class="info-row">
+                    <i class="fas fa-poll"></i>
+                    <div class="rating-stars">${generateRatingStars(movieState.rating)}</div>
+                </div>
+                <div class="info-row">
+                    <i class="fas fa-comment-dots"></i>
+                    <span>${movieState.note ? movieState.note.substring(0, 25) + (movieState.note.length > 25 ? '...' : '') : 'Nessun ricordo'}</span>
+                </div>
+            </div>
+        `;
+    }
+
     function renderMovies() {
         if (!filmContainer) return;
         const searchTerm = searchInput.value.toLowerCase();
         const selectedCategory = categoryFilter.value;
 
-        const filteredList = filmList.filter(movie => {
-            const matchesSearch = movie.title.toLowerCase().includes(searchTerm);
-            const matchesCategory = selectedCategory === 'all' || movie.category === selectedCategory;
-            return matchesSearch && matchesCategory;
-        });
+        const filteredList = filmList.filter(movie => 
+            movie.title.toLowerCase().includes(searchTerm) && 
+            (selectedCategory === 'all' || movie.category === selectedCategory)
+        );
 
         currentlyVisibleFilmIds = filteredList.map(m => m.id);
-        const groupedMovies = filteredList.reduce((acc, movie) => { acc[movie.category] = acc[movie.category] || []; acc[movie.category].push(movie); return acc; }, {});
+        const groupedMovies = filteredList.reduce((acc, movie) => {
+            acc[movie.category] = acc[movie.category] || [];
+            acc[movie.category].push(movie);
+            return acc;
+        }, {});
         
         filmContainer.innerHTML = ''; 
         if (filteredList.length === 0) {
-            filmContainer.innerHTML = `<p style="text-align:center; font-size: 1.2rem; color: var(--dark-secondary-text);">Nessun film trovato.</p>`;
+            filmContainer.innerHTML = `<p class="no-results">Nessun film trovato.</p>`;
             return;
         }
 
@@ -70,22 +96,32 @@ document.addEventListener('DOMContentLoaded', () => {
             categorySection.innerHTML = `<h2>${category}</h2>`;
             const grid = document.createElement('div');
             grid.className = 'film-grid';
+
             groupedMovies[category].forEach(movie => {
                 const movieState = appState.movies[movie.id] || {};
+                const isSeen = !!movieState.seen;
+                const isFavorite = !!movieState.favorite;
+
                 const card = document.createElement('div');
-                card.className = 'movie-card';
+                card.className = `movie-card ${isSeen ? 'is-seen' : ''} ${isFavorite ? 'is-favorite' : ''}`;
+                card.dataset.id = movie.id;
+                
                 card.innerHTML = `
-                    <div class="movie-title">${movie.title} (${movie.year})</div>
-                    <div class="checkbox-container">
-                        <label class="checkbox-label">
-                            <input type="checkbox" data-id="${movie.id}" ${movieState.seen ? 'checked' : ''}>
-                            <span>Visto</span>
+                    <div class="card-header">
+                        <label class="custom-checkbox">
+                            <input type="checkbox" data-action="toggle-seen" ${isSeen ? 'checked' : ''}>
+                            <span class="checkmark"></span>
                         </label>
+                        <div class="title-year">
+                            <div class="movie-title">${movie.title}</div>
+                            <div class="movie-year">(${movie.year})</div>
+                        </div>
+                        <button class="fav-btn ${isFavorite ? 'favorited' : ''}" data-action="toggle-favorite" aria-label="Aggiungi ai preferiti">
+                            <i class="fa-star"></i>
+                        </button>
                     </div>
-                    <div class="movie-actions">
-                        <button class="fav-btn ${movieState.favorite ? 'favorited' : ''}" data-id="${movie.id}" aria-label="Aggiungi ai preferiti"><i class="fas fa-heart"></i></button>
-                        <button class="details-btn" data-id="${movie.id}">Dettagli</button>
-                    </div>`;
+                    ${isSeen ? getSeenDetailsHTML(movieState) : ''}
+                `;
                 grid.appendChild(card);
             });
             categorySection.appendChild(grid);
@@ -104,123 +140,91 @@ document.addEventListener('DOMContentLoaded', () => {
             categoryFilter.appendChild(option);
         });
     }
-
-    function animateCounter(element, start, end, duration, isPercentage = false) {
-        if (!element) return;
-        let startTimestamp = null;
-        const step = (timestamp) => {
-            if (!startTimestamp) startTimestamp = timestamp;
-            const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-            const value = progress * (end - start) + start;
-            if (isPercentage) {
-                element.textContent = `${value.toFixed(1)}%`;
-            } else {
-                element.textContent = Math.floor(value);
-            }
-            if (progress < 1) {
-                window.requestAnimationFrame(step);
-            }
-        };
-        window.requestAnimationFrame(step);
-    }
     
-    // ==========================================================
-    // --- FUNZIONE CORRETTA ---
-    // ==========================================================
-    function updateStatsDashboard(isInitialLoad = false) {
+    function updateStatsDashboard() {
         const seenCounterEl = document.getElementById('stats-seen-count');
         const favCounterEl = document.getElementById('stats-favorite-count');
         const completionEl = document.getElementById('stats-completion-percentage');
         
-        // Denominatore: Corretto, conta solo i film la cui categoria include "Anni"
         const totalCanonicalMovies = filmList.filter(f => f.category.includes("Anni")).length;
-        
-        let seenCount = 0;
-        let favoriteCount = 0;
-
-        // Itera sugli ID dei film registrati nello stato
+        let totalSeenCount = 0, canonicalSeenCount = 0, favoriteCount = 0;
+    
         for (const id in appState.movies) {
             const state = appState.movies[id];
-            
-            // Il contatore dei preferiti può includere tutti i film
-            if (state.favorite) {
-                favoriteCount++;
-            }
-
-            // Per il contatore dei "Visti", controlliamo che il film sia canonico
+            if (state.favorite) favoriteCount++;
             if (state.seen) {
-                // Troviamo il film corrispondente nella lista principale
+                totalSeenCount++;
                 const movie = filmList.find(m => m.id == id);
-                // Incrementiamo il contatore solo se il film esiste e la sua categoria è tra quelle canoniche
-                if (movie && movie.category.includes("Anni")) {
-                    seenCount++;
-                }
+                if (movie && movie.category.includes("Anni")) canonicalSeenCount++;
             }
         }
         
-        const completionPercentage = totalCanonicalMovies > 0 ? (seenCount / totalCanonicalMovies) * 100 : 0;
-
-        if (isInitialLoad || !document.hidden) {
-            const oldSeen = parseInt(seenCounterEl.textContent, 10) || 0;
-            const oldFav = parseInt(favCounterEl.textContent, 10) || 0;
-            const oldCompletion = parseFloat(completionEl.textContent) || 0;
-            animateCounter(seenCounterEl, oldSeen, seenCount, 500);
-            animateCounter(favCounterEl, oldFav, favoriteCount, 500);
-            animateCounter(completionEl, oldCompletion, completionPercentage, 800, true);
-        } else {
-            if(seenCounterEl) seenCounterEl.textContent = seenCount;
-            if(favCounterEl) favCounterEl.textContent = favoriteCount;
-            if(completionEl) completionEl.textContent = `${completionPercentage.toFixed(1)}%`;
-        }
+        const completionPercentage = totalCanonicalMovies > 0 ? (canonicalSeenCount / totalCanonicalMovies) * 100 : 0;
+    
+        if(seenCounterEl) seenCounterEl.textContent = totalSeenCount;
+        if(favCounterEl) favCounterEl.textContent = favoriteCount;
+        if(completionEl) completionEl.textContent = `${completionPercentage.toFixed(1)}%`;
     }
 
+    // ========== OTTIMIZZAZIONE: Gestione eventi per modificare solo la card interessata ==========
     function handleContainerClick(e) {
-        const target = e.target;
-        const movieId = target.closest('[data-id]')?.dataset.id;
-        if (!movieId) return;
+        const card = e.target.closest('.movie-card');
+        if (!card) return;
+
+        const movieId = card.dataset.id;
+        const action = e.target.closest('[data-action]')?.dataset.action;
+        
         appState.movies[movieId] = appState.movies[movieId] || {};
         const movieState = appState.movies[movieId];
-        if (target.type === 'checkbox') {
-            movieState.seen = target.checked;
-            if (target.checked && !movieState.dateSeen) {
+
+        if (action === 'toggle-seen') {
+            movieState.seen = e.target.checked;
+            if (movieState.seen && !movieState.dateSeen) {
                 movieState.dateSeen = new Date().toLocaleDateString('it-IT');
             }
-            updateStatsDashboard();
-            saveState();
-        }
-        if (target.closest('.fav-btn')) {
-            const btn = target.closest('.fav-btn');
+            
+            // Aggiornamento DOM mirato
+            card.classList.toggle('is-seen', movieState.seen);
+            const existingBody = card.querySelector('.card-body');
+            if(movieState.seen && !existingBody) {
+                card.insertAdjacentHTML('beforeend', getSeenDetailsHTML(movieState));
+            } else if (!movieState.seen && existingBody) {
+                existingBody.remove();
+            }
+        } else if (action === 'toggle-favorite') {
             movieState.favorite = !movieState.favorite;
-            btn.classList.toggle('favorited', movieState.favorite);
-            updateStatsDashboard();
-            saveState();
-        }
-        if (target.closest('.details-btn')) {
+            
+            // Aggiornamento DOM mirato
+            card.classList.toggle('is-favorite', movieState.favorite);
+            e.target.closest('.fav-btn').classList.toggle('favorited', movieState.favorite);
+        } else {
+            // Se non è un'azione specifica, apri la modale
             openModal(movieId);
+            return; // Usciamo per non eseguire il resto della funzione
         }
+        
+        saveState();
+        updateStatsDashboard();
     }
+
 
     function markAllVisibleAsSeen() {
         currentlyVisibleFilmIds.forEach(id => {
             appState.movies[id] = appState.movies[id] || {};
             appState.movies[id].seen = true;
-            if (!appState.movies[id].dateSeen) {
-                appState.movies[id].dateSeen = new Date().toLocaleDateString('it-IT');
-            }
+            if (!appState.movies[id].dateSeen) appState.movies[id].dateSeen = new Date().toLocaleDateString('it-IT');
         });
         saveState();
-        renderMovies();
+        renderMovies(); // Qui il re-render completo è corretto
         updateStatsDashboard();
     }
 
     function resetAllData() {
-        const confirmation = confirm("Sei sicuro di voler cancellare tutti i dati? Tutti i film visti, i preferiti e le note verranno persi per sempre. Questa azione non può essere annullata.");
-        if (confirmation) {
+        if (confirm("Sei sicuro di voler cancellare tutti i dati? Questa azione non può essere annullata.")) {
             appState.movies = {};
             saveState();
-            renderMovies();
+            renderMovies(); // Qui il re-render completo è corretto
             updateStatsDashboard();
-            alert("Tutti i dati sono stati cancellati. Si riparte da zero!");
         }
     }
 
@@ -228,10 +232,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const movie = filmList.find(m => m.id == movieId);
         if (!movie || !modal) return;
         const movieState = appState.movies[movieId] || {};
-        const modalBody = document.getElementById('modal-body');
-        if (!modalBody) return;
-        modalBody.innerHTML = `<h3>${movie.title} (${movie.year})</h3><p><strong>Visto il:</strong> ${movieState.dateSeen || 'Non ancora visto'}</p><div><label for="movie-note">Il nostro ricordo speciale:</label><textarea id="movie-note" rows="4" placeholder="Cosa ricordiamo di questo momento?">${movieState.note || ''}</textarea></div><div><label for="movie-rating">Voto (da 1 a 10):</label><input type="number" id="movie-rating" min="1" max="10" step="0.5" value="${movieState.rating || ''}"></div><button id="save-modal-btn" class="action-btn">Salva Ricordo</button>`;
-        modal.style.display = 'block';
+        document.getElementById('modal-body').innerHTML = `<h3>${movie.title} (${movie.year})</h3><p><strong>Visto il:</strong> ${movieState.dateSeen || 'Non ancora visto'}</p><div><label for="movie-note">Il nostro ricordo speciale:</label><textarea id="movie-note" rows="4" placeholder="Cosa ricordiamo di questo momento?">${movieState.note || ''}</textarea></div><div><label for="movie-rating">Voto (da 1 a 10):</label><input type="number" id="movie-rating" min="1" max="10" step="0.5" value="${movieState.rating || ''}"></div><button id="save-modal-btn" class="action-btn">Salva Ricordo</button>`;
+        modal.style.display = 'flex';
         document.getElementById('save-modal-btn').addEventListener('click', () => {
             const state = appState.movies[movieId] || {};
             state.note = document.getElementById('movie-note').value;
@@ -239,27 +241,35 @@ document.addEventListener('DOMContentLoaded', () => {
             appState.movies[movieId] = state;
             saveState();
             closeModal();
+            // Aggiorniamo la singola card invece di fare un re-render completo
+            const cardInDom = document.querySelector(`.movie-card[data-id="${movieId}"]`);
+            if(cardInDom && state.seen) {
+                let cardBody = cardInDom.querySelector('.card-body');
+                if(!cardBody) {
+                    cardInDom.insertAdjacentHTML('beforeend', getSeenDetailsHTML(state));
+                } else {
+                    cardBody.remove();
+                    cardInDom.insertAdjacentHTML('beforeend', getSeenDetailsHTML(state));
+                }
+            }
         }, { once: true });
     }
     
     function closeModal() { if (modal) modal.style.display = 'none'; }
     function toggleTheme() { appState.theme = appState.theme === 'dark' ? 'light' : 'dark'; document.body.className = `${appState.theme}-mode`; updateThemeIcon(); saveState(); }
-    function updateThemeIcon() { if (!themeToggleBtn) return; const icon = themeToggleBtn.querySelector('i'); if (icon) { icon.className = appState.theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon'; } }
-    function handleScroll() { if (!scrollToTopBtn) return; if (window.scrollY > 300) { scrollToTopBtn.style.display = 'block'; scrollToTopBtn.style.opacity = '1'; } else { scrollToTopBtn.style.opacity = '0'; setTimeout(() => { if (window.scrollY <= 300) { scrollToTopBtn.style.display = 'none'; } }, 300); } }
+    function updateThemeIcon() { if (themeToggleBtn) { const icon = themeToggleBtn.querySelector('i'); if (icon) icon.className = appState.theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon'; } }
+    function handleScroll() { if (!scrollToTopBtn) return; if (window.scrollY > 300) { scrollToTopBtn.style.display = 'block'; } else { scrollToTopBtn.style.display = 'none'; } }
     
     function exportSeenMovies() {
-        const seenMovies = [];
-        for (const id in appState.movies) {
-            const state = appState.movies[id];
-            if (state.seen) {
-                const movie = filmList.find(m => m.id == id);
-                if (movie) {
-                    seenMovies.push({ titolo: movie.title, anno: movie.year, visto: !!state.seen, preferito: !!state.favorite, dataVisione: state.dateSeen || 'N/D', ricordo: state.note || '', voto: state.rating || 'N/D' });
-                }
-            }
-        }
-        if (seenMovies.length === 0) { alert("Nessun film è stato ancora segnato come visto!"); return; }
-        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(seenMovies, null, 2));
+        const seenMoviesData = filmList
+            .filter(film => appState.movies[film.id] && appState.movies[film.id].seen)
+            .map(film => {
+                const state = appState.movies[film.id];
+                return { titolo: film.title, anno: film.year, preferito: !!state.favorite, dataVisione: state.dateSeen || 'N/D', ricordo: state.note || '', voto: state.rating || 'N/D' };
+            });
+
+        if (seenMoviesData.length === 0) { alert("Nessun film è stato ancora segnato come visto!"); return; }
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(seenMoviesData, null, 2));
         const downloadAnchorNode = document.createElement('a');
         downloadAnchorNode.setAttribute("href", dataStr);
         downloadAnchorNode.setAttribute("download", "momento_film_visti.json");
@@ -269,20 +279,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- EVENT LISTENERS ---
-    if (filmContainer) filmContainer.addEventListener('click', handleContainerClick);
-    if (themeToggleBtn) themeToggleBtn.addEventListener('click', toggleTheme);
+    filmContainer.addEventListener('click', handleContainerClick);
+    themeToggleBtn.addEventListener('click', toggleTheme);
     window.addEventListener('scroll', handleScroll);
-    if (modalCloseBtn) modalCloseBtn.addEventListener('click', closeModal);
-    window.addEventListener('click', (e) => { if (e.target == modal) { closeModal(); } });
-    if (exportBtn) exportBtn.addEventListener('click', exportSeenMovies);
-    if (searchInput) searchInput.addEventListener('input', renderMovies);
-    if (categoryFilter) categoryFilter.addEventListener('change', renderMovies);
-    if (markAllSeenBtn) markAllSeenBtn.addEventListener('click', markAllVisibleAsSeen);
-    if (resetAllBtn) resetAllBtn.addEventListener('click', resetAllData);
+    modalCloseBtn.addEventListener('click', closeModal);
+    window.addEventListener('click', (e) => { if (e.target == modal) closeModal(); });
+    exportBtn.addEventListener('click', exportSeenMovies);
+    searchInput.addEventListener('input', () => setTimeout(renderMovies, 300)); // Debounce per la ricerca
+    categoryFilter.addEventListener('change', renderMovies);
+    markAllSeenBtn.addEventListener('click', markAllVisibleAsSeen);
+    resetAllBtn.addEventListener('click', resetAllData);
 
     // --- INIZIALIZZAZIONE ---
     loadState();
     populateCategoryFilter();
     renderMovies();
-    updateStatsDashboard(true);
+    updateStatsDashboard();
 });
