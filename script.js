@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // ... (tutto il codice esistente da filmList fino a handleScroll rimane invariato) ...
     const filmList = [ { id: 1, title: "Biancaneve e i sette nani", year: 1937, category: "Anni '30–'50 (Era Classica e post‑Guerra)" }, { id: 2, title: "Pinocchio", year: 1940, category: "Anni '30–'50 (Era Classica e post‑Guerra)" }, { id: 3, title: "Fantasia", year: 1940, category: "Anni '30–'50 (Era Classica e post‑Guerra)" }, { id: 4, title: "Dumbo", year: 1941, category: "Anni '30–'50 (Era Classica e post‑Guerra)" }, { id: 5, title: "Bambi", year: 1942, category: "Anni '30–'50 (Era Classica e post‑Guerra)" }, { id: 6, title: "Saludos Amigos", year: 1943, category: "Anni '30–'50 (Era Classica e post‑Guerra)" }, { id: 7, title: "I Tre Caballeros", year: 1945, category: "Anni '30–'50 (Era Classica e post‑Guerra)" }, { id: 8, title: "Musica Maestro", year: 1946, category: "Anni '30–'50 (Era Classica e post‑Guerra)" }, { id: 9, title: "Bongo e i tre avventurieri", year: 1947, category: "Anni '30–'50 (Era Classica e post‑Guerra)" }, { id: 10, title: "Lo scrigno delle sette perle", year: 1948, category: "Anni '30–'50 (Era Classica e post‑Guerra)" }, { id: 11, title: "Le avventure di Ichabod e Mr. Toad", year: 1949, category: "Anni '30–'50 (Era Classica e post‑Guerra)" }, { id: 12, title: "Cenerentola", year: 1950, category: "Anni '30–'50 (Era Classica e post‑Guerra)" }, { id: 13, title: "Alice nel Paese delle Meraviglie", year: 1951, category: "Anni '30–'50 (Era Classica e post‑Guerra)" }, { id: 14, title: "Le avventure di Peter Pan", year: 1953, category: "Anni '30–'50 (Era Classica e post‑Guerra)" }, { id: 15, title: "Lilli e il vagabondo", year: 1955, category: "Anni '30–'50 (Era Classica e post‑Guerra)" }, { id: 16, title: "La bella addormentata nel bosco", year: 1959, category: "Anni '30–'50 (Era Classica e post‑Guerra)" }, { id: 17, title: "La carica dei cento e uno", year: 1961, category: "Anni ’60–’70 (Silver e Bronze Era)" }, { id: 18, title: "La spada nella roccia", year: 1963, category: "Anni ’60–’70 (Silver e Bronze Era)" }, { id: 19, title: "Il libro della giungla", year: 1967, category: "Anni ’60–’70 (Silver e Bronze Era)" }, { id: 20, title: "Gli Aristogatti", year: 1970, category: "Anni ’60–’70 (Silver e Bronze Era)" }, { id: 21, title: "Robin Hood", year: 1973, category: "Anni ’60–’70 (Silver e Bronze Era)" }, { id: 22, title: "Le avventure di Winnie the Pooh", year: 1977, category: "Anni ’60–’70 (Silver e Bronze Era)" }, { id: 23, title: "Le avventure di Bianca e Bernie", year: 1977, category: "Anni ’60–’70 (Silver e Bronze Era)" }, { id: 24, title: "Red e Toby nemiciamici", year: 1981, category: "Anni ’60–’70 (Silver e Bronze Era)" }, { id: 25, title: "Taron e la pentola magica", year: 1985, category: "Anni ’80–’90 (Disney Renaissance)" }, { id: 26, title: "Basil l'investigatopo", year: 1986, category: "Anni ’80–’90 (Disney Renaissance)" }, { id: 27, title: "Oliver & Company", year: 1988, category: "Anni ’80–’90 (Disney Renaissance)" }, { id: 28, title: "La sirenetta", year: 1989, category: "Anni ’80–’90 (Disney Renaissance)" }, { id: 29, title: "Bianca e Bernie nella terra dei canguri", year: 1990, category: "Anni ’80–’90 (Disney Renaissance)" }, { id: 30, title: "La bella e la bestia", year: 1991, category: "Anni ’80–’90 (Disney Renaissance)" }, { id: 31, title: "Aladdin", year: 1992, category: "Anni ’80–’90 (Disney Renaissance)" }, { id: 32, title: "Il re leone", year: 1994, category: "Anni ’80–’90 (Disney Renaissance)" }, { id: 33, title: "Pocahontas", year: 1995, category: "Anni ’80–’90 (Disney Renaissance)" }, { id: 34, title: "Il gobbo di Notre Dame", year: 1996, category: "Anni ’80–’90 (Disney Renaissance)" }, { id: 35, title: "Hercules", year: 1997, category: "Anni ’80–’90 (Disney Renaissance)" }, { id: 36, "title": "Mulan", year: 1998, category: "Anni ’80–’90 (Disney Renaissance)" }, { id: 37, title: "Tarzan", year: 1999, category: "Anni ’80–’90 (Disney Renaissance)" }, { id: 38, title: "Dinosauri", year: 2000, category: "Anni 2000–2010 (Transizione e rinascita moderna)" }, { id: 39, title: "Le follie dell’imperatore", year: 2000, category: "Anni 2000–2010 (Transizione e rinascita moderna)" }, { id: 40, title: "Atlantis - L'impero perduto", year: 2001, category: "Anni 2000–2010 (Transizione e rinascita moderna)" }, { id: 41, title: "Lilo & Stitch", year: 2002, category: "Anni 2000–2010 (Transizione e rinascita moderna)" }, { id: 42, title: "Il pianeta del tesoro", year: 2002, category: "Anni 2000–2010 (Transizione e rinascita moderna)" }, { id: 43, title: "Koda, fratello orso", year: 2003, category: "Anni 2000–2010 (Transizione e rinascita moderna)" }, { id: 44, title: "Mucche alla riscossa", year: 2004, category: "Anni 2000–2010 (Transizione e rinascita moderna)" }, { id: 45, title: "Chicken Little", year: 2005, category: "Anni 2000–2010 (Transizione e rinascita moderna)" }, { id: 46, title: "I Robinson - Una famiglia spaziale", year: 2007, category: "Anni 2000–2010 (Transizione e rinascita moderna)" }, { id: 47, title: "Bolt - Un eroe a quattro zampe", year: 2008, category: "Anni 2000–2010 (Transizione e rinascita moderna)" }, { id: 48, title: "La principessa e il ranocchio", year: 2009, category: "Anni 2000–2010 (Transizione e rinascita moderna)" }, { id: 49, title: "Rapunzel - L’intreccio della torre", year: 2010, category: "Anni 2000–2010 (Transizione e rinascita moderna)" }, { id: 50, title: "Winnie the Pooh - Nuove avventure nel Bosco dei 100 Acri", year: 2011, category: "Anni 2010–2020 (Seconda Rinascita)" }, { id: 51, title: "Ralph Spaccatutto", year: 2012, category: "Anni 2010–2020 (Seconda Rinascita)" }, { id: 52, title: "Frozen - Il regno di ghiaccio", year: 2013, category: "Anni 2010–2020 (Seconda Rinascita)" }, { id: 53, title: "Big Hero 6", year: 2014, category: "Anni 2010–2020 (Seconda Rinascita)" }, { id: 54, title: "Zootropolis", year: 2016, category: "Anni 2010–2020 (Seconda Rinascita)" }, { id: 55, title: "Oceania", year: 2016, category: "Anni 2010–2020 (Seconda Rinascita)" }, { id: 56, title: "Ralph spacca Internet", year: 2018, category: "Anni 2010–2020 (Seconda Rinascita)" }, { id: 57, title: "Frozen II - Il segreto di Arendelle", year: 2019, category: "Anni 2010–2020 (Seconda Rinascita)" }, { id: 58, title: "Raya e l’ultimo drago", year: 2021, category: "Anni 2020–2023" }, { id: 59, title: "Encanto", year: 2021, category: "Anni 2020–2023" }, { id: 60, title: "Strange World - Un mondo misterioso", year: 2022, category: "Anni 2020–2023" }, { id: 61, title: "Wish", year: 2023, category: "Anni 2020–2023" }, { id: 101, title: "Mufasa: Il re leone", year: 2024, category: "Live-action & Futuri" }, { id: 102, title: "Snow White", year: 2025, category: "Live-action & Futuri" }, { id: 103, title: "Lilo & Stitch (live-action)", year: 2025, category: "Live-action & Futuri" }, { id: 104, title: "Freakier Friday", year: 2025, category: "Live-action & Futuri" }, { id: 105, title: "Moana (live-action)", year: 2026, category: "Live-action & Futuri" }, { id: 201, title: "Il gobbo di Notre Dame (live-action)", year: "TBD", category: "In Sviluppo" }, { id: 202, title: "Cruella 2", year: "TBD", category: "In Sviluppo" }, { id: 203, title: "Bambi (live-action)", year: "TBD", category: "In Sviluppo" }, { id: 204, title: "Il libro della giungla 2", year: "TBD", category: "In Sviluppo" }, { id: 205, title: "Gli Aristogatti (live-action)", year: "TBD", category: "In Sviluppo" }, { id: 206, title: "Hercules (live-action)", year: "TBD", category: "In Sviluppo" }, { id: 207, title: "Robin Hood (live-action)", year: "TBD", category: "In Sviluppo" }, { id: 208, title: "La spada nella roccia (live-action)", year: "TBD", category: "In Sviluppo" },
     ];
     let appState = { theme: 'dark', movies: {} };
@@ -8,12 +7,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const themeToggleBtn = document.getElementById('theme-toggle');
     const scrollToTopBtn = document.getElementById('scroll-to-top');
     const modal = document.getElementById('movie-modal');
-    const modalCloseBtn = document.querySelector('.close-btn');
+    const modalCloseBtn = modal.querySelector('.close-btn');
     const exportBtn = document.getElementById('export-btn');
     const searchInput = document.getElementById('search-input');
     const categoryFilter = document.getElementById('category-filter');
     const markAllSeenBtn = document.getElementById('mark-all-seen-btn');
     const resetAllBtn = document.getElementById('reset-all-btn');
+    const randomPickBtn = document.getElementById('random-pick-btn');
+    const randomPickModal = document.getElementById('random-pick-modal');
+    const randomPickModalBody = document.getElementById('random-pick-body');
+    const randomPickModalCloseBtn = randomPickModal.querySelector('.close-btn');
+
     function loadState() { const savedState = localStorage.getItem('momentoFilmState'); if (savedState) appState = JSON.parse(savedState); document.body.className = `${appState.theme || 'dark'}-mode`; updateThemeIcon(); }
     function saveState() { localStorage.setItem('momentoFilmState', JSON.stringify(appState)); }
     function generateRatingStars(rating) { let starsHTML = ''; const numRating = parseFloat(rating); if (isNaN(numRating) || numRating < 0.5) return 'Nessun voto'; for (let i = 1; i <= 5; i++) { if (numRating >= i) starsHTML += '<i class="fas fa-star"></i>'; else if (numRating >= i - 0.5) starsHTML += '<i class="fas fa-star-half-alt"></i>'; else starsHTML += '<i class="far fa-star"></i>'; } return starsHTML; }
@@ -30,20 +34,30 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateThemeIcon() { if (themeToggleBtn) { const icon = themeToggleBtn.querySelector('i'); if (icon) icon.className = appState.theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon'; } }
     function handleScroll() { if (!scrollToTopBtn) return; if (window.scrollY > 300) { scrollToTopBtn.style.display = 'flex'; scrollToTopBtn.style.opacity = '1'; } else { scrollToTopBtn.style.opacity = '0'; setTimeout(() => { if (window.scrollY <= 300) scrollToTopBtn.style.display = 'none'; }, 300); } }
 
-    function exportSeenMovies() {
+    async function exportSeenMovies() {
         const seenMovies = filmList.filter(film => appState.movies[film.id]?.seen);
         if (seenMovies.length === 0) {
             alert("Nessun film è stato ancora segnato come visto!");
             return;
         }
 
+        let pdfStyles = '';
+        try {
+            // Carica il contenuto del file CSS
+            const response = await fetch('pdf-styles.css');
+            if (!response.ok) throw new Error(`Errore HTTP: ${response.status}`);
+            pdfStyles = await response.text();
+        } catch (error) {
+            console.error("Impossibile caricare pdf-styles.css:", error);
+            alert("Errore: impossibile generare l'esportazione. Controlla che il file pdf-styles.css sia presente e accessibile.");
+            return;
+        }
+
         const today = new Date();
         const formattedDate = `${today.getDate().toString().padStart(2, '0')}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getFullYear()}`;
         
-        // Crea una nuova finestra per la stampa
         const printWindow = window.open('', '_blank');
 
-        // Assembla l'intero contenuto del PDF in una sola stringa HTML
         const favorites = seenMovies.filter(movie => appState.movies[movie.id]?.favorite);
         const others = seenMovies.filter(movie => !appState.movies[movie.id]?.favorite);
 
@@ -58,57 +72,61 @@ document.addEventListener('DOMContentLoaded', () => {
         const othersHTML = others.length > 0 ? `<div class="pdf-section"><h2 class="pdf-section-title"><i class="fas fa-film"></i> Il Diario del Nostro Viaggio</h2><div class="pdf-card-grid">${others.map(createCardHTML).join('')}</div></div>` : '';
         const magicDustHTML = `<div class="magic-dust"><i class="fas fa-star"></i><i class="fas fa-heart"></i><i class="fas fa-magic-wand-sparkles"></i><i class="fas fa-star"></i><i class="fas fa-music"></i><i class="fas fa-heart"></i><i class="fas fa-magic-wand-sparkles"></i><i class="fas fa-star"></i><i class="fas fa-heart"></i><i class="fas fa-music"></i><i class="fas fa-star"></i><i class="fas fa-magic-wand-sparkles"></i></div>`;
         
-        const contentHTML = `
-            <div class="pdf-cover-page">
-                <div class="pdf-cover-content">${logoHTML}<h1 class="logo-text">Momento Film</h1><p class="tagline">Il riepilogo della nostra avventura Disney</p></div>
-                ${magicDustHTML}
-            </div>
-            ${favoritesHTML ? `<div class="pdf-page-break"></div>${favoritesHTML}` : ''}
-            ${othersHTML ? `<div class="pdf-page-break"></div>${othersHTML}` : ''}
-        `;
+        const contentHTML = `<div class="pdf-cover-page"><div class="pdf-cover-content">${logoHTML}<h1 class="logo-text">Momento Film</h1><p class="tagline">Il riepilogo della nostra avventura Disney</p></div>${magicDustHTML}</div>${favoritesHTML ? `<div class="pdf-page-break"></div>${favoritesHTML}` : ''}${othersHTML ? `<div class="pdf-page-break"></div>${othersHTML}` : ''}`;
 
-        // Scrive l'HTML e gli stili nella nuova finestra
         printWindow.document.write(`
-            <!DOCTYPE html>
-            <html lang="it">
-            <head>
-                <meta charset="UTF-8">
+            <!DOCTYPE html><html lang="it"><head><meta charset="UTF-8">
                 <title>Momento Film - Riepilogo ${formattedDate}</title>
                 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
                 <link rel="preconnect" href="https://fonts.googleapis.com">
                 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
                 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
-                <link rel="stylesheet" href="pdf-styles.css">
+                <style>${pdfStyles}</style>
             </head>
             <body>
                 ${contentHTML}
                 <div class="pdf-footer">Un viaggio magico, un ricordo alla volta.</div>
                 <script>
                     window.onload = function() {
-                        // Aspetta che il browser abbia disegnato tutto prima di stampare
-                        setTimeout(() => {
-                            window.print();
-                            window.close();
-                        }, 250); // Un piccolo ritardo per sicurezza
+                        setTimeout(() => { window.print(); window.close(); }, 500);
                     }
                 <\/script>
-            </body>
-            </html>
+            </body></html>
         `);
         printWindow.document.close();
     }
+
+    function pickRandomMovie() {
+        const unseenMovies = filmList.filter(film => {
+            const isSeen = appState.movies[film.id]?.seen;
+            const isReleasable = typeof film.year === 'number' && film.year <= new Date().getFullYear();
+            return !isSeen && isReleasable;
+        });
+
+        if (unseenMovies.length === 0) {
+            randomPickModalBody.innerHTML = `<h2>Congratulazioni!</h2><p class="picked-movie-title" style="font-size: 1.5rem; animation: none; text-shadow: none; color: var(--dark-primary-text);">Hai già visto tutti i film disponibili!</p><p>È tempo di attendere le prossime uscite Disney!</p>`;
+        } else {
+            const pickedMovie = unseenMovies[Math.floor(Math.random() * unseenMovies.length)];
+            randomPickModalBody.innerHTML = `<h2>Il Prossimo Momento Magico è...</h2><div class="picked-movie-title">${pickedMovie.title}</div><p class="picked-movie-year">(${pickedMovie.year})</p>`;
+        }
+        randomPickModal.style.display = 'flex';
+    }
     
     function setupStickyToolbar() { const toolbar = document.querySelector('.filter-toolbar'); if (!toolbar) return; const observer = new IntersectionObserver(([e]) => e.target.classList.toggle('is-stuck', e.intersectionRatio < 1), { threshold: [1] }); observer.observe(toolbar); }
+    
     filmContainer.addEventListener('click', handleContainerClick);
     themeToggleBtn.addEventListener('click', toggleTheme);
     window.addEventListener('scroll', handleScroll);
     modalCloseBtn.addEventListener('click', closeModal);
-    window.addEventListener('click', (e) => { if (e.target == modal) closeModal(); });
+    window.addEventListener('click', (e) => { if (e.target == modal) closeModal(); if (e.target == randomPickModal) randomPickModal.style.display = 'none'; });
     exportBtn.addEventListener('click', exportSeenMovies);
     searchInput.addEventListener('input', () => { clearTimeout(window.searchTimeout); window.searchTimeout = setTimeout(renderMovies, 300); });
     categoryFilter.addEventListener('change', renderMovies);
     markAllSeenBtn.addEventListener('click', markAllVisibleAsSeen);
     resetAllBtn.addEventListener('click', resetAllData);
+    randomPickBtn.addEventListener('click', pickRandomMovie);
+    randomPickModalCloseBtn.addEventListener('click', () => { randomPickModal.style.display = 'none'; });
+
     loadState();
     populateCategoryFilter();
     renderMovies();

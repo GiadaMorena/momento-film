@@ -81,6 +81,41 @@ body.light-mode .modal-content textarea, body.light-mode .modal-content input { 
 .close-btn:hover { color: var(--royal-gold); transform: scale(1.1); }
 #save-modal-btn { width: 100%; padding: 12px; font-size: 1.1rem; margin-top: 1rem; background-color: var(--info-color); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; transition: filter 0.2s ease, transform 0.2s ease; }
 #save-modal-btn:hover { filter: brightness(1.15); transform: translateY(-2px); }
+
+/* ==== ✨ Stile per il Modale del Film Casuale "Momento Magico" ✨ ==== */
+.random-pick-content {
+    text-align: center;
+    border: 2px solid var(--royal-gold);
+    background: radial-gradient(circle, var(--dark-card-stuck) 0%, var(--dark-bg) 100%);
+    box-shadow: 0 0 30px rgba(var(--info-color-rgb), 0.5), 0 0 15px var(--royal-gold);
+}
+body.light-mode .random-pick-content {
+    background: radial-gradient(circle, #fff, #f8f9fa 100%);
+    box-shadow: 0 0 30px rgba(var(--info-color-rgb), 0.3);
+}
+#random-pick-body h2 {
+    font-family: 'Cinzel', serif;
+    font-size: 1.3rem;
+    color: var(--dark-secondary-text);
+    margin-bottom: 1rem;
+}
+#random-pick-body .picked-movie-title {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(2rem, 8vw, 2.8rem);
+    color: var(--accent-hover);
+    text-shadow: 0 0 10px var(--accent-color);
+    margin: 1rem 0;
+    animation: pulse-glow 2s infinite alternate;
+}
+#random-pick-body .picked-movie-year {
+    font-size: 1.2rem;
+    color: var(--dark-secondary-text);
+}
+@keyframes pulse-glow {
+    from { text-shadow: 0 0 5px var(--royal-gold), 0 0 10px var(--royal-gold); }
+    to { text-shadow: 0 0 20px var(--accent-hover), 0 0 35px var(--accent-hover); }
+}
+
 .theme-toggle-btn { position: absolute; top: 20px; right: 20px; background: none; border: 2px solid white; color: white; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; transition: all 0.3s ease; }
 .theme-toggle-btn:hover { background-color: rgba(255, 255, 255, 0.2); transform: scale(1.15) rotate(15deg); }
 #scroll-to-top { position: fixed; bottom: 20px; right: 20px; color: white; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; display: none; align-items: center; justify-content: center; font-size: 1.2rem; z-index: 1000; background-color: var(--magic-purple); opacity: 0; transition: opacity 0.3s ease, transform 0.3s ease; }
