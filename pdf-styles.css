@@ -1,133 +1,152 @@
-/* ================================================= */
-/* ==   STILI PER IL PDF - DESIGN FINALE          == */
-/* ================================================= */
-
+/* ========================================================== */
+/* ==       PDF "ARTBOOK EDITION" STYLES                 == */
+/* ========================================================== */
 @media print {
-    /* --- MODIFICA CHIAVE: Rimozione delle intestazioni e piè di pagina del browser --- */
-    @page {
-        size: A4 portrait;
-        margin: 15mm; /* Margini interni del contenuto del PDF */
+    @page { size: A4 portrait; margin: 0; }
 
-        /* Azzeriamo le aree dei margini dove il browser inserisce i suoi testi */
-        @top-left { content: ''; }
-        @top-center { content: ''; }
-        @top-right { content: ''; }
-        @bottom-left { content: ''; }
-        @bottom-center { content: ''; }
-        @bottom-right { content: ''; }
-    }
-
-    /* Impostazioni globali della pagina PDF */
     body {
         font-family: 'Lato', sans-serif;
-        color: #333333;
-        background-color: #ffffff;
+        background-color: #fdfdfd;
         margin: 0;
-        padding: 0;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
     }
-
-    /* Intestazione del PDF, resa più elegante */
-    .pdf-header {
-        text-align: center;
-        margin-bottom: 20px;
-        padding-bottom: 15px;
-        position: relative;
-        border-bottom: 3px solid transparent;
+    
+    .pdf-page {
+        padding: 18mm;
+        box-sizing: border-box;
     }
 
-    .pdf-header::after {
+    /* ---- HEADER DI COPERTINA ---- */
+    .pdf-cover-header {
+        text-align: center;
+        border: 2px solid #0d1b2a;
+        padding: 25px;
+        background: linear-gradient(135deg, #f8f9fa, #ffffff);
+        border-radius: 4px;
+        position: relative;
+    }
+    .pdf-cover-header::before, .pdf-cover-header::after {
         content: '';
         position: absolute;
-        left: 0;
-        bottom: -3px;
-        width: 100%;
-        height: 3px;
-        background: linear-gradient(90deg, #ffc107, #9d4edd, #007bff, #ffc107);
-        background-size: 200%;
+        width: 15px; height: 15px;
+        border: 2px solid #0d1b2a;
+        border-radius: 50%;
+    }
+    .pdf-cover-header::before { top: 10px; left: 10px; }
+    .pdf-cover-header::after { bottom: 10px; right: 10px; }
+    
+    .logo-text {
+        font-family: 'Cinzel', serif;
+        font-size: 36pt;
+        font-weight: 700;
+        letter-spacing: 2px;
+        color: #0d1b2a;
+        line-height: 1.1;
     }
 
-    .pdf-header h1 {
-        font-family: 'Cinzel', serif;
-        color: #0d1b2a;
-        margin: 0;
-        font-size: 28pt; /* Leggermente più grande per importanza */
-        font-weight: 700;
+    .tagline {
+        font-size: 11pt;
+        color: #6c757d;
+        margin-top: 8px;
+        text-transform: uppercase;
         letter-spacing: 1px;
     }
-
-    .pdf-header p {
-        color: #6c757d;
-        margin: 5px 0 0;
-        font-size: 11pt; /* Più leggibile */
-    }
-
-    /* Stile della tabella dei film, con bordi più leggeri */
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 10px;
-        font-size: 10pt;
-    }
-
-    th, td {
-        border: 1px solid #e9ecef; /* Bordo più leggero */
-        padding: 12px 14px;
-        text-align: left;
-        vertical-align: middle;
-        word-break: break-word;
-    }
-
-    thead tr {
-        background-color: #1b263b;
-        color: #e0e1dd;
-        font-weight: bold;
-        font-size: 11pt;
+    
+    .pdf-summary {
+        text-align: center;
+        font-size: 9pt;
+        color: #adb5bd;
+        margin: 15px 0 25px 0;
         letter-spacing: 0.5px;
     }
+    
+    /* ---- SEZIONI E TITOLI INTERNI ---- */
+    .pdf-section {
+        break-before: page; /* Ogni sezione inizia su una nuova pagina */
+        padding-top: 10mm; /* Spazio per evitare che tocchi l'header virtuale */
+    }
+    .pdf-section:first-of-type {
+        break-before: avoid; /* La prima sezione non ha bisogno di un salto pagina */
+        padding-top: 0;
+    }
+    .pdf-section-title {
+        font-family: 'Cinzel', serif;
+        font-size: 18pt;
+        font-weight: 700;
+        color: #1b263b;
+        margin: 0 0 15px 0;
+        border-bottom: 1px solid #dee2e6;
+        padding-bottom: 8px;
+    }
+    .pdf-section-title .fa-star {
+        color: var(--royal-gold);
+        margin-right: 10px;
+    }
 
-    tbody tr:nth-child(even) {
+    /* ---- GRIGLIA DI SCHEDE FILM ---- */
+    .pdf-card-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8mm;
+    }
+
+    .pdf-movie-card {
+        background-color: #ffffff;
+        border: 1px solid #e9ecef;
+        border-radius: 6px;
+        padding: 12px;
+        box-sizing: border-box;
+        break-inside: avoid;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+    .pdf-movie-card.is-favorite-pdf {
+        border-left: 4px solid var(--royal-gold);
+    }
+
+    .pdf-movie-title {
+        font-family: 'Cinzel', serif;
+        font-size: 14pt;
+        font-weight: 700;
+        color: #1b263b;
+        margin: 0 0 8px 0;
+    }
+    .pdf-movie-year { font-weight: 400; font-size: 11pt; color: #6c757d; }
+    
+    .pdf-info-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 8px;
+        margin: 12px 0;
+    }
+
+    .pdf-info-item {
         background-color: #f8f9fa;
+        padding: 8px 10px;
+        border-radius: 4px;
+        font-size: 9.5pt;
+    }
+
+    .pdf-info-label {
+        font-weight: 700;
+        color: #6c757d;
+        margin-right: 8px;
     }
     
-    .pdf-rating-stars {
-        color: #ffc107;
-        font-size: 12pt;
-    }
-
-    .pdf-rating-stars .far.fa-star {
-        color: #ced4da; /* Stelle vuote più definite */
-    }
-
-    .pdf-rating-stars .fa-star,
-    .pdf-rating-stars .fa-star-half-alt {
-        margin-right: 2px;
-    }
+    .pdf-info-value { color: #212529; }
+    .pdf-rating-stars { color: var(--accent-color); font-size: 11pt; }
+    .pdf-rating-stars .far.fa-star { color: #ced4da; }
     
-    td .fa-star {
-        color: #ffc107;
-        font-size: 13pt;
-        text-align: center;
-        display: block;
-    }
+    .pdf-notes { margin-top: 10px; }
+    .pdf-notes .pdf-info-label { font-size: 8pt; color: #9d4edd; text-transform: uppercase; margin-bottom: 5px; }
+    .pdf-notes p { padding: 10px; margin: 0; font-size: 9pt; font-style: italic; color: #495057; background: rgba(233, 236, 239, 0.4); border-left: 3px solid #ced4da; border-radius: 0 4px 4px 0;}
 
-    td:nth-child(3), td:nth-child(4) {
-        text-align: center;
-        width: 15%; /* Assegna una larghezza fissa alle colonne dei voti/preferiti */
-    }
-    
-    td:nth-child(1) {
-        width: 50%; /* Dà più spazio al titolo */
-    }
-
-    /* Piè di pagina, reso più elegante */
+    /* ---- FOOTER ---- */
     .pdf-footer {
         text-align: center;
-        margin-top: 30px;
-        padding-top: 15px;
-        border-top: 1px solid #e9ecef;
-        font-size: 9pt;
-        color: #adb5bd; /* Colore più tenue */
+        font-size: 8pt;
+        color: #adb5bd;
+        margin-top: auto;
+        padding-top: 20px;
     }
 }
