@@ -210,7 +210,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // ========== MODIFICA CHIAVE: Struttura HTML della modale corretta ==========
     function openModal(movieId) {
         const movie = filmList.find(m => m.id == movieId);
         if (!movie || !modal) return;
@@ -227,7 +226,7 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
             
             <div class="form-group">
-                <label for="movie-rating">Voto (da 1 a 10):</label>
+                <label for="movie-rating">Voto (da 1 a 5):</label>
                 <input type="number" id="movie-rating" min="0.5" max="5" step="0.5" value="${movieState.rating || ''}">
             </div>
             

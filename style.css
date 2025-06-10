@@ -192,26 +192,16 @@ body.light-mode .movie-title { color: var(--light-primary-text); }
 body.light-mode .modal-content { background-color: var(--light-card); }
 .modal-content h3 { font-size: 1.5rem; margin-bottom: 0.5rem; font-family: 'Cinzel', serif; }
 .modal-content .modal-seen-date { font-size: 1rem; color: var(--dark-secondary-text); margin-top: 0; margin-bottom: 1.5rem; }
-/* --- MODIFICA CHIAVE: Stili per i campi del form della modale --- */
-.form-group {
-    margin-bottom: 1.2rem;
-}
+.form-group { margin-bottom: 1.2rem; }
 .form-group label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: bold;
-    font-size: 0.9rem;
-    color: var(--dark-secondary-text);
+    display: block; margin-bottom: 0.5rem; font-weight: bold;
+    font-size: 0.9rem; color: var(--dark-secondary-text);
 }
 .modal-content textarea, .modal-content input {
-    width: 100%;
-    padding: 0.75rem;
-    border-radius: 8px;
+    width: 100%; padding: 0.75rem; border-radius: 8px;
     border: 1px solid var(--dark-secondary-text);
-    background-color: var(--dark-bg);
-    color: var(--dark-primary-text);
-    font-size: 1rem;
-    box-sizing: border-box; /* Cruciale per il padding */
+    background-color: var(--dark-bg); color: var(--dark-primary-text);
+    font-size: 1rem; box-sizing: border-box;
     transition: border-color 0.2s, box-shadow 0.2s;
 }
 body.light-mode .modal-content textarea, body.light-mode .modal-content input {
@@ -220,8 +210,7 @@ body.light-mode .modal-content textarea, body.light-mode .modal-content input {
     border-color: #ced4da;
 }
 .modal-content textarea:focus, .modal-content input:focus {
-    outline: none;
-    border-color: var(--info-color);
+    outline: none; border-color: var(--info-color);
     box-shadow: 0 0 0 3px rgba(var(--info-color-rgb), 0.4);
 }
 .close-btn {
@@ -238,22 +227,22 @@ body.light-mode .modal-content textarea, body.light-mode .modal-content input {
 }
 #save-modal-btn:hover { filter: brightness(1.15); transform: translateY(-2px); }
 #scroll-to-top, .theme-toggle-btn {
-    position: fixed; width: 50px; height: 50px;
+    position: fixed; width: 45px; height: 45px;
     border-radius: 50%; cursor: pointer;
     display: flex; align-items: center; justify-content: center;
     transition: all 0.3s ease;
 }
 #scroll-to-top {
     bottom: 20px; right: 20px; color: white;
-    font-size: 1.5rem; z-index: 1000;
+    font-size: 1.2rem; z-index: 1000;
     background-color: var(--magic-purple);
-    display: none; /* Gestito da JS */
+    display: none;
 }
 #scroll-to-top:hover { background-color: var(--royal-gold); transform: scale(1.1); }
 .theme-toggle-btn {
     top: 20px; right: 20px;
     background: none; border: 2px solid white; color: white;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
 }
 .theme-toggle-btn:hover { background-color: rgba(255, 255, 255, 0.2); transform: scale(1.15) rotate(15deg); }
 
@@ -270,16 +259,37 @@ header::after, .film-category h2::after {
 .film-category h2::after { height: 2px; }
 
 /* =================================================================== */
-/* ==   📱 STILI RESPONSIVE   == */
+/* ==   📱 STILI RESPONSIVE PER MOBILE   == */
 /* =================================================================== */
-@media (max-width: 920px) {
-    .filter-toolbar { flex-direction: column; align-items: stretch; }
-}
 @media (max-width: 768px) {
-    .stats-dashboard { grid-template-columns: 1fr; gap: 1.5rem; }
+    .stats-dashboard {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    .filter-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
 }
-@media (max-width: 480px) {
-    .film-grid { grid-template-columns: 1fr; gap: 1.2rem; }
-    #film-container, header { padding: 2rem 1rem; }
-    .toolbar-btn { font-size: 0.8rem; padding: 10px 15px; }
+@media (max-width: 600px) {
+    header {
+        padding: 3rem 1rem;
+    }
+    #film-container {
+        padding: 0 1rem;
+    }
+    .film-grid {
+        grid-template-columns: 1fr;
+        gap: 1.2rem;
+    }
+    .toolbar-btn {
+        font-size: 0.9rem;
+        padding: 10px 15px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    .modal-content {
+        padding: 1.5rem;
+        width: 100%;
+    }
 }
