@@ -10,10 +10,6 @@
 }
 body { font-family: 'Lato', sans-serif; margin: 0; background-color: var(--dark-bg); color: var(--dark-primary-text); transition: background-color 0.4s ease-out, color 0.4s ease-out; }
 body.light-mode { background-color: var(--light-bg); color: var(--light-primary-text); }
-
-/* =================================================================== */
-/* ==   KEYFRAMES E STILI BASE   == */
-/* =================================================================== */
 @keyframes scaleIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
 @keyframes modalEnter { from { opacity: 0; transform: translateY(-25px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
 header { background-image: linear-gradient(rgba(13, 27, 42, 0.7), rgba(13, 27, 42, 0.5)), url('images/header-bg.jpg'); background-size: cover; background-position: center; text-align: center; padding: 4rem 1.5rem; color: white; position: relative; border-bottom: 3px solid transparent; }
@@ -23,10 +19,6 @@ body.light-mode .stats-dashboard { background-color: var(--light-card); }
 .stat-card { text-align: center; }
 .stat-number { font-size: clamp(1.8rem, 7vw, 2.5rem); font-weight: 700; font-family: 'Cinzel', serif; color: var(--accent-hover); }
 .stat-label { font-size: 0.9rem; color: var(--dark-secondary-text); margin-top: 0.5rem; }
-
-/* =================================================================== */
-/* ==   TOOLBAR FILTRI OTTIMIZZATA CON STICKY   == */
-/* =================================================================== */
 .filter-toolbar { display: flex; align-items: center; gap: 0.8rem; max-width: 1400px; margin: -1rem auto 2rem auto; padding: 1rem; background: var(--dark-card); border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); flex-wrap: nowrap; position: sticky; top: 0; z-index: 1000; transition: background-color 0.3s ease, box-shadow 0.3s ease, padding 0.3s ease, border-radius 0.3s ease; }
 .filter-toolbar.is-stuck { background-color: var(--dark-card-stuck); box-shadow: 0 5px 20px rgba(0,0,0,0.3); padding: 0.8rem 1rem; border-radius: 0 0 10px 10px; }
 body.light-mode .filter-toolbar { background: var(--light-card); }
@@ -44,10 +36,6 @@ body.light-mode .input-wrapper { background-color: var(--light-bg); }
 .toolbar-btn.secondary:hover { background-color: var(--magic-purple); color: white; }
 .toolbar-btn.accent { background-color: var(--royal-gold); color: #14213d; }
 .toolbar-btn.accent:hover { filter: brightness(1.1); }
-
-/* =================================================================== */
-/* ==   STILE MOVIE CARD   == */
-/* =================================================================== */
 #film-container { max-width: 1400px; margin: 2rem auto; padding: 0 1.5rem; }
 .film-category h2 { font-family: 'Cinzel', serif; padding-bottom: 0.5rem; margin-bottom: 1.5rem; position: relative; border-bottom: 2px solid transparent; }
 .film-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem; }
@@ -79,10 +67,6 @@ body.light-mode .movie-card { background: var(--light-card); border-color: #dee2
 .rating-stars { color: var(--accent-color); }
 .rating-stars .fa-star, .rating-stars .fa-star-half-alt { margin-right: 2px; }
 .rating-stars .far.fa-star { color: var(--dark-secondary-text); }
-
-/* =================================================================== */
-/* ==   MODALE E PULSANTI FLUTTUANTI   == */
-/* =================================================================== */
 .modal { display: none; align-items: center; justify-content: center; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.8); padding: 1rem; }
 .modal-content { background-color: var(--dark-card); margin: auto; padding: 2rem; width: 90%; max-width: 600px; border-radius: 10px; position: relative; animation: modalEnter 0.4s ease-out; display: flex; flex-direction: column; }
 body.light-mode .modal-content { background-color: var(--light-card); }
@@ -101,38 +85,11 @@ body.light-mode .modal-content textarea, body.light-mode .modal-content input { 
 .theme-toggle-btn:hover { background-color: rgba(255, 255, 255, 0.2); transform: scale(1.15) rotate(15deg); }
 #scroll-to-top { position: fixed; bottom: 20px; right: 20px; color: white; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; display: none; align-items: center; justify-content: center; font-size: 1.2rem; z-index: 1000; background-color: var(--magic-purple); opacity: 0; transition: opacity 0.3s ease, transform 0.3s ease; }
 #scroll-to-top:hover { background-color: var(--royal-gold); transform: scale(1.1); }
-
-/* =================================================================== */
-/* ==   🌈 BORDO GRADIENTE ANIMATO   == */
-/* =================================================================== */
 header::after, .film-category h2::after { content: ''; position: absolute; left: 0; bottom: -1px; width: 100%; background: linear-gradient(90deg, var(--royal-gold), var(--magic-purple), var(--info-color), var(--royal-gold)); background-size: 300%; animation: animate-gradient-border 10s linear infinite; }
 @keyframes animate-gradient-border { to { background-position-x: 300%; } }
-/* --- MODIFICA CHIAVE: Aumentato spessore delle linee --- */
 header::after { height: 4px; }
 .film-category h2::after { height: 3px; }
-
-/* =================================================================== */
-/* ==   📄 STILI PER GESTIRE LA VISIBILITÀ DURANTE LA STAMPA   == */
-/* =================================================================== */
-@media screen { #pdf-render-target { display: none; } }
 .printing-in-progress > *:not(#pdf-render-target) { display: none !important; }
-.printing-in-progress #pdf-render-target { display: block !important; }
-
-/* =================================================================== */
-/* ==   📱 STILI RESPONSIVE PER MOBILE   == */
-/* =================================================================== */
-@media (max-width: 920px) {
-    .filter-toolbar { flex-wrap: wrap; }
-    .stats-dashboard { grid-template-columns: 1fr; gap: 1rem; padding: 1rem; margin: 1.5rem auto; max-width: 95%; }
-}
-@media (max-width: 600px) {
-    header { padding: 3rem 1rem; }
-    #film-container { padding: 0 1rem; }
-    .film-grid { grid-template-columns: 1fr; gap: 1rem; }
-    .filter-toolbar { flex-direction: column; align-items: stretch; padding: 1rem; position: static; max-width: 95%; }
-    .toolbar-btn { font-size: 0.9rem; padding: 12px 15px; width: 100%; box-sizing: border-box; }
-    .modal-content { padding: 1.5rem 1rem; width: 100%; }
-    .movie-card:hover, .fav-btn:hover { transform: none; }
-    .theme-toggle-btn { top: 15px; right: 15px; width: 40px; height: 40px; }
-    #scroll-to-top { width: 40px; height: 40px; font-size: 1.1rem; bottom: 15px; right: 15px; }
-}
+@media screen { #pdf-render-target { display: none; } }
+@media (max-width: 920px) { .filter-toolbar { flex-wrap: wrap; } .stats-dashboard { grid-template-columns: 1fr; gap: 1rem; padding: 1rem; margin: 1.5rem auto; max-width: 95%; } }
+@media (max-width: 600px) { header { padding: 3rem 1rem; } #film-container { padding: 0 1rem; } .film-grid { grid-template-columns: 1fr; gap: 1rem; } .filter-toolbar { flex-direction: column; align-items: stretch; padding: 1rem; position: static; max-width: 95%; } .toolbar-btn { font-size: 0.9rem; padding: 12px 15px; width: 100%; box-sizing: border-box; } .modal-content { padding: 1.5rem 1rem; width: 100%; } .movie-card:hover, .fav-btn:hover { transform: none; } .theme-toggle-btn { top: 15px; right: 15px; width: 40px; height: 40px; } #scroll-to-top { width: 40px; height: 40px; font-size: 1.1rem; bottom: 15px; right: 15px; } }
