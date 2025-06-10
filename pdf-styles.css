@@ -1,64 +1,103 @@
-/* Stili che verranno applicati SOLO durante la stampa o l'esportazione in PDF */
+/* ================================================= */
+/* ==   STILI PER IL PDF - DESIGN FINALE          == */
+/* ================================================= */
+
 @media print {
-    /* Impostazioni globali della pagina */
+    /* --- MODIFICA CHIAVE: Rimozione delle intestazioni e piè di pagina del browser --- */
+    @page {
+        size: A4 portrait;
+        margin: 15mm; /* Margini interni del contenuto del PDF */
+
+        /* Azzeriamo le aree dei margini dove il browser inserisce i suoi testi */
+        @top-left { content: ''; }
+        @top-center { content: ''; }
+        @top-right { content: ''; }
+        @bottom-left { content: ''; }
+        @bottom-center { content: ''; }
+        @bottom-right { content: ''; }
+    }
+
+    /* Impostazioni globali della pagina PDF */
     body {
         font-family: 'Lato', sans-serif;
         color: #333333;
         background-color: #ffffff;
         margin: 0;
         padding: 0;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
     }
 
-    /* Intestazione del PDF */
+    /* Intestazione del PDF, resa più elegante */
     .pdf-header {
         text-align: center;
-        border-bottom: 2px solid #9d4edd; /* --magic-purple */
-        padding-bottom: 15px;
         margin-bottom: 20px;
+        padding-bottom: 15px;
+        position: relative;
+        border-bottom: 3px solid transparent;
+    }
+
+    .pdf-header::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: -3px;
+        width: 100%;
+        height: 3px;
+        background: linear-gradient(90deg, #ffc107, #9d4edd, #007bff, #ffc107);
+        background-size: 200%;
     }
 
     .pdf-header h1 {
         font-family: 'Cinzel', serif;
         color: #0d1b2a;
-        margin: 0 0 5px 0;
-        font-size: 24pt;
+        margin: 0;
+        font-size: 28pt; /* Leggermente più grande per importanza */
+        font-weight: 700;
+        letter-spacing: 1px;
     }
 
     .pdf-header p {
         color: #6c757d;
-        margin: 0;
-        font-size: 10pt;
+        margin: 5px 0 0;
+        font-size: 11pt; /* Più leggibile */
     }
 
-    /* Stile della tabella dei film */
+    /* Stile della tabella dei film, con bordi più leggeri */
     table {
         width: 100%;
         border-collapse: collapse;
         margin-top: 10px;
-        font-size: 9pt; /* Riduciamo la dimensione per farci stare più dati */
+        font-size: 10pt;
     }
 
     th, td {
-        border: 1px solid #dee2e6;
-        padding: 10px;
+        border: 1px solid #e9ecef; /* Bordo più leggero */
+        padding: 12px 14px;
         text-align: left;
-        /* Permette alle parole lunghe di andare a capo */
+        vertical-align: middle;
         word-break: break-word;
     }
 
-    th {
-        background-color: #1b263b; /* --dark-card */
-        color: #e0e1dd; /* --dark-primary-text */
+    thead tr {
+        background-color: #1b263b;
+        color: #e0e1dd;
         font-weight: bold;
+        font-size: 11pt;
+        letter-spacing: 0.5px;
     }
 
-    tr:nth-child(even) {
-        background-color: #f8f9fa; /* Sfondo alternato per le righe */
+    tbody tr:nth-child(even) {
+        background-color: #f8f9fa;
     }
     
     .pdf-rating-stars {
-        color: #ffc107; /* --accent-color */
-        font-size: 11pt;
+        color: #ffc107;
+        font-size: 12pt;
+    }
+
+    .pdf-rating-stars .far.fa-star {
+        color: #ced4da; /* Stelle vuote più definite */
     }
 
     .pdf-rating-stars .fa-star,
@@ -66,17 +105,29 @@
         margin-right: 2px;
     }
     
-    /* Per il preferito */
     td .fa-star {
-        color: #ffc107; /* --accent-color */
-        font-size: 11pt;
+        color: #ffc107;
+        font-size: 13pt;
+        text-align: center;
+        display: block;
     }
 
-    /* Piè di pagina */
+    td:nth-child(3), td:nth-child(4) {
+        text-align: center;
+        width: 15%; /* Assegna una larghezza fissa alle colonne dei voti/preferiti */
+    }
+    
+    td:nth-child(1) {
+        width: 50%; /* Dà più spazio al titolo */
+    }
+
+    /* Piè di pagina, reso più elegante */
     .pdf-footer {
         text-align: center;
-        margin-top: 25px;
+        margin-top: 30px;
+        padding-top: 15px;
+        border-top: 1px solid #e9ecef;
         font-size: 9pt;
-        color: #a8b2d1;
+        color: #adb5bd; /* Colore più tenue */
     }
 }
