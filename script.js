@@ -20,9 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function loadState() {
         const savedState = localStorage.getItem('momentoFilmState');
-        if (savedState) {
-            appState = JSON.parse(savedState);
-        }
+        if (savedState) appState = JSON.parse(savedState);
         document.body.className = `${appState.theme || 'dark'}-mode`;
         updateThemeIcon();
     }
@@ -37,13 +35,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isNaN(numRating) || numRating < 0.5) return 'Nessun voto';
 
         for (let i = 1; i <= 5; i++) {
-            if (numRating >= i) {
-                starsHTML += '<i class="fas fa-star"></i>';
-            } else if (numRating >= i - 0.5) {
-                starsHTML += '<i class="fas fa-star-half-alt"></i>';
-            } else {
-                starsHTML += '<i class="far fa-star"></i>';
-            }
+            if (numRating >= i) starsHTML += '<i class="fas fa-star"></i>';
+            else if (numRating >= i - 0.5) starsHTML += '<i class="fas fa-star-half-alt"></i>';
+            else starsHTML += '<i class="far fa-star"></i>';
         }
         return starsHTML;
     }
@@ -79,8 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         currentlyVisibleFilmIds = filteredList.map(m => m.id);
         const groupedMovies = filteredList.reduce((acc, movie) => {
-            acc[movie.category] = acc[movie.category] || [];
-            acc[movie.category].push(movie);
+            (acc[movie.category] = acc[movie.category] || []).push(movie);
             return acc;
         }, {});
         
@@ -166,7 +159,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if(completionEl) completionEl.textContent = `${completionPercentage.toFixed(1)}%`;
     }
 
-    // ========== OTTIMIZZAZIONE: Gestione eventi per modificare solo la card interessata ==========
     function handleContainerClick(e) {
         const card = e.target.closest('.movie-card');
         if (!card) return;
@@ -182,31 +174,21 @@ document.addEventListener('DOMContentLoaded', () => {
             if (movieState.seen && !movieState.dateSeen) {
                 movieState.dateSeen = new Date().toLocaleDateString('it-IT');
             }
-            
-            // Aggiornamento DOM mirato
             card.classList.toggle('is-seen', movieState.seen);
             const existingBody = card.querySelector('.card-body');
-            if(movieState.seen && !existingBody) {
-                card.insertAdjacentHTML('beforeend', getSeenDetailsHTML(movieState));
-            } else if (!movieState.seen && existingBody) {
-                existingBody.remove();
-            }
+            if(movieState.seen && !existingBody) card.insertAdjacentHTML('beforeend', getSeenDetailsHTML(movieState));
+            else if (!movieState.seen && existingBody) existingBody.remove();
         } else if (action === 'toggle-favorite') {
             movieState.favorite = !movieState.favorite;
-            
-            // Aggiornamento DOM mirato
             card.classList.toggle('is-favorite', movieState.favorite);
             e.target.closest('.fav-btn').classList.toggle('favorited', movieState.favorite);
         } else {
-            // Se non è un'azione specifica, apri la modale
             openModal(movieId);
-            return; // Usciamo per non eseguire il resto della funzione
+            return;
         }
-        
         saveState();
         updateStatsDashboard();
     }
-
 
     function markAllVisibleAsSeen() {
         currentlyVisibleFilmIds.forEach(id => {
@@ -215,7 +197,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!appState.movies[id].dateSeen) appState.movies[id].dateSeen = new Date().toLocaleDateString('it-IT');
         });
         saveState();
-        renderMovies(); // Qui il re-render completo è corretto
+        renderMovies();
         updateStatsDashboard();
     }
 
@@ -223,17 +205,37 @@ document.addEventListener('DOMContentLoaded', () => {
         if (confirm("Sei sicuro di voler cancellare tutti i dati? Questa azione non può essere annullata.")) {
             appState.movies = {};
             saveState();
-            renderMovies(); // Qui il re-render completo è corretto
+            renderMovies();
             updateStatsDashboard();
         }
     }
 
+    // ========== MODIFICA CHIAVE: Struttura HTML della modale corretta ==========
     function openModal(movieId) {
         const movie = filmList.find(m => m.id == movieId);
         if (!movie || !modal) return;
         const movieState = appState.movies[movieId] || {};
-        document.getElementById('modal-body').innerHTML = `<h3>${movie.title} (${movie.year})</h3><p><strong>Visto il:</strong> ${movieState.dateSeen || 'Non ancora visto'}</p><div><label for="movie-note">Il nostro ricordo speciale:</label><textarea id="movie-note" rows="4" placeholder="Cosa ricordiamo di questo momento?">${movieState.note || ''}</textarea></div><div><label for="movie-rating">Voto (da 1 a 10):</label><input type="number" id="movie-rating" min="1" max="10" step="0.5" value="${movieState.rating || ''}"></div><button id="save-modal-btn" class="action-btn">Salva Ricordo</button>`;
+        const modalBody = document.getElementById('modal-body');
+
+        modalBody.innerHTML = `
+            <h3>${movie.title} (${movie.year})</h3>
+            <p class="modal-seen-date">Visto il: ${movieState.dateSeen || 'Non ancora visto'}</p>
+            
+            <div class="form-group">
+                <label for="movie-note">Il nostro ricordo speciale:</label>
+                <textarea id="movie-note" rows="4" placeholder="Cosa ricordiamo di questo momento?">${movieState.note || ''}</textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="movie-rating">Voto (da 1 a 10):</label>
+                <input type="number" id="movie-rating" min="0.5" max="5" step="0.5" value="${movieState.rating || ''}">
+            </div>
+            
+            <button id="save-modal-btn" class="action-btn">Salva Ricordo</button>
+        `;
+
         modal.style.display = 'flex';
+        
         document.getElementById('save-modal-btn').addEventListener('click', () => {
             const state = appState.movies[movieId] || {};
             state.note = document.getElementById('movie-note').value;
@@ -241,16 +243,12 @@ document.addEventListener('DOMContentLoaded', () => {
             appState.movies[movieId] = state;
             saveState();
             closeModal();
-            // Aggiorniamo la singola card invece di fare un re-render completo
+
             const cardInDom = document.querySelector(`.movie-card[data-id="${movieId}"]`);
             if(cardInDom && state.seen) {
                 let cardBody = cardInDom.querySelector('.card-body');
-                if(!cardBody) {
-                    cardInDom.insertAdjacentHTML('beforeend', getSeenDetailsHTML(state));
-                } else {
-                    cardBody.remove();
-                    cardInDom.insertAdjacentHTML('beforeend', getSeenDetailsHTML(state));
-                }
+                if(cardBody) cardBody.remove();
+                cardInDom.insertAdjacentHTML('beforeend', getSeenDetailsHTML(state));
             }
         }, { once: true });
     }
@@ -258,7 +256,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function closeModal() { if (modal) modal.style.display = 'none'; }
     function toggleTheme() { appState.theme = appState.theme === 'dark' ? 'light' : 'dark'; document.body.className = `${appState.theme}-mode`; updateThemeIcon(); saveState(); }
     function updateThemeIcon() { if (themeToggleBtn) { const icon = themeToggleBtn.querySelector('i'); if (icon) icon.className = appState.theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon'; } }
-    function handleScroll() { if (!scrollToTopBtn) return; if (window.scrollY > 300) { scrollToTopBtn.style.display = 'block'; } else { scrollToTopBtn.style.display = 'none'; } }
+    function handleScroll() { if (!scrollToTopBtn) return; if (window.scrollY > 300) scrollToTopBtn.style.display = 'flex'; else scrollToTopBtn.style.display = 'none'; }
     
     function exportSeenMovies() {
         const seenMoviesData = filmList
@@ -285,7 +283,7 @@ document.addEventListener('DOMContentLoaded', () => {
     modalCloseBtn.addEventListener('click', closeModal);
     window.addEventListener('click', (e) => { if (e.target == modal) closeModal(); });
     exportBtn.addEventListener('click', exportSeenMovies);
-    searchInput.addEventListener('input', () => setTimeout(renderMovies, 300)); // Debounce per la ricerca
+    searchInput.addEventListener('input', () => setTimeout(renderMovies, 300));
     categoryFilter.addEventListener('change', renderMovies);
     markAllSeenBtn.addEventListener('click', markAllVisibleAsSeen);
     resetAllBtn.addEventListener('click', resetAllData);

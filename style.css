@@ -31,7 +31,6 @@ body.light-mode {
     color: var(--light-primary-text);
 }
 
-
 /* =================================================================== */
 /* ==   🎬 KEYFRAMES PER ANIMAZIONI GLOBALI   == */
 /* =================================================================== */
@@ -96,7 +95,7 @@ body.light-mode .filter-toolbar input, body.light-mode .filter-toolbar select { 
 .toolbar-btn.accent:hover { filter: brightness(1.1); }
 
 /* =================================================================== */
-/* ==   🃏 NUOVO STILE MOVIE CARD   == */
+/* ==   🃏 STILE MOVIE CARD   == */
 /* =================================================================== */
 #film-container { max-width: 1200px; margin: 2rem auto; padding: 0 1.5rem; }
 .film-category h2 {
@@ -116,7 +115,6 @@ body.light-mode .filter-toolbar input, body.light-mode .filter-toolbar select { 
 }
 body.light-mode .movie-card { background: var(--light-card); border-color: #dee2e6; }
 .movie-card:hover { transform: translateY(-5px); border-color: var(--info-color); }
-/* Bordo "Glow" per i preferiti */
 .movie-card::after {
     content: ''; position: absolute; top: -2px; left: -2px;
     width: calc(100% + 4px); height: calc(100% + 4px);
@@ -189,8 +187,43 @@ body.light-mode .movie-title { color: var(--light-primary-text); }
     background-color: var(--dark-card); margin: auto; padding: 2rem;
     width: 90%; max-width: 600px; border-radius: 12px;
     position: relative; animation: modalEnter 0.4s ease-out;
+    display: flex; flex-direction: column;
 }
 body.light-mode .modal-content { background-color: var(--light-card); }
+.modal-content h3 { font-size: 1.5rem; margin-bottom: 0.5rem; font-family: 'Cinzel', serif; }
+.modal-content .modal-seen-date { font-size: 1rem; color: var(--dark-secondary-text); margin-top: 0; margin-bottom: 1.5rem; }
+/* --- MODIFICA CHIAVE: Stili per i campi del form della modale --- */
+.form-group {
+    margin-bottom: 1.2rem;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    font-size: 0.9rem;
+    color: var(--dark-secondary-text);
+}
+.modal-content textarea, .modal-content input {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 8px;
+    border: 1px solid var(--dark-secondary-text);
+    background-color: var(--dark-bg);
+    color: var(--dark-primary-text);
+    font-size: 1rem;
+    box-sizing: border-box; /* Cruciale per il padding */
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+body.light-mode .modal-content textarea, body.light-mode .modal-content input {
+    background-color: var(--light-bg);
+    color: var(--light-primary-text);
+    border-color: #ced4da;
+}
+.modal-content textarea:focus, .modal-content input:focus {
+    outline: none;
+    border-color: var(--info-color);
+    box-shadow: 0 0 0 3px rgba(var(--info-color-rgb), 0.4);
+}
 .close-btn {
     color: #aaa; position: absolute; top: 15px; right: 20px;
     font-size: 28px; font-weight: bold; cursor: pointer;
@@ -198,7 +231,7 @@ body.light-mode .modal-content { background-color: var(--light-card); }
 }
 .close-btn:hover { color: var(--royal-gold); transform: scale(1.1); }
 #save-modal-btn {
-    width: 100%; padding: 12px; font-size: 1.1rem; margin-top: 1.5rem;
+    width: 100%; padding: 12px; font-size: 1.1rem; margin-top: 1rem;
     background-color: var(--info-color); color: white; border: none;
     border-radius: 8px; cursor: pointer; font-weight: bold;
     transition: filter 0.2s ease, transform 0.2s ease;
