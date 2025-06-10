@@ -204,61 +204,66 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
-    // ========== FUNZIONE ESPORTAZIONE PDF CORRETTA E CON FEEDBACK ==========
-    function exportSeenMovies() {
+    // ========== NUOVA FUNZIONE PER ESPORTARE IN PDF - ROBUSTA E AFFIDABILE ==========
+    async function exportSeenMovies() {
         const exportButton = document.getElementById('export-btn');
         const originalButtonHTML = exportButton.innerHTML;
-
-        const seenMovies = filmList.filter(film => appState.movies[film.id]?.seen);
-        if (seenMovies.length === 0) {
-            alert("Nessun film è stato ancora segnato come visto!");
-            return;
-        }
-        
-        // --- FEEDBACK PER L'UTENTE ---
-        exportButton.disabled = true;
-        exportButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creazione...';
-
         const exportContainer = document.createElement('div');
-        exportContainer.className = 'pdf-export-container';
         
-        const today = new Date().toLocaleDateString('it-IT');
-        let tableRowsHTML = '';
-        seenMovies.forEach(movie => {
-            const state = appState.movies[movie.id];
-            tableRowsHTML += `
-                <tr>
-                    <td>${movie.title} (${movie.year})</td>
-                    <td>${state.dateSeen || 'N/D'}</td>
-                    <td class="pdf-rating-stars">${generateRatingStars(state.rating)}</td>
-                    <td>${state.favorite ? '<i class="fas fa-star"></i>' : '-'}</td>
-                </tr>`;
-        });
+        try {
+            const seenMovies = filmList.filter(film => appState.movies[film.id]?.seen);
+            if (seenMovies.length === 0) {
+                alert("Nessun film è stato ancora segnato come visto!");
+                return;
+            }
 
-        exportContainer.innerHTML = `
-            <div class="pdf-header"><h1>Momento Film</h1><p>La Nostra Avventura Disney - Esportato il ${today}</p></div>
-            <table><thead><tr><th>Titolo</th><th>Visto il</th><th>Voto</th><th>Preferito</th></tr></thead><tbody>${tableRowsHTML}</tbody></table>
-            <div class="pdf-footer"><p>Grazie per aver condiviso questi momenti!</p></div>`;
-        
-        document.body.appendChild(exportContainer);
-        
-        // --- FIX: Attendiamo che il DOM sia pronto prima di generare il PDF ---
-        setTimeout(() => {
+            exportButton.disabled = true;
+            exportButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creazione...';
+
+            exportContainer.className = 'pdf-export-container';
+            
+            const today = new Date().toLocaleDateString('it-IT');
+            let tableRowsHTML = '';
+            seenMovies.forEach(movie => {
+                const state = appState.movies[movie.id];
+                tableRowsHTML += `
+                    <tr>
+                        <td>${movie.title} (${movie.year})</td>
+                        <td>${state.dateSeen || 'N/D'}</td>
+                        <td class="pdf-rating-stars">${generateRatingStars(state.rating)}</td>
+                        <td>${state.favorite ? '<i class="fas fa-star"></i>' : '-'}</td>
+                    </tr>`;
+            });
+
+            exportContainer.innerHTML = `
+                <div class="pdf-header"><h1>Momento Film</h1><p>La Nostra Avventura Disney - Esportato il ${today}</p></div>
+                <table><thead><tr><th>Titolo</th><th>Visto il</th><th>Voto</th><th>Preferito</th></tr></thead><tbody>${tableRowsHTML}</tbody></table>
+                <div class="pdf-footer"><p>Grazie per aver condiviso questi momenti!</p></div>`;
+            
+            document.body.appendChild(exportContainer);
+
+            // Attende che i font (incluso Font Awesome) siano pronti
+            await document.fonts.ready;
+
             const options = {
                 margin: [10, 10, 15, 10], filename: `Momento Film - ${today.replace(/\//g, '-')}.pdf`,
                 image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2, useCORS: true },
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
             };
 
-            html2pdf().from(exportContainer).set(options).save().catch(err => {
-                console.error("Errore durante la creazione del PDF:", err);
-                alert("Si è verificato un errore durante la creazione del PDF.");
-            }).finally(() => {
+            await html2pdf().from(exportContainer).set(options).save();
+
+        } catch (err) {
+            console.error("Errore durante la creazione del PDF:", err);
+            alert("Si è verificato un errore durante la creazione del PDF.");
+        } finally {
+            // Questo blocco viene eseguito sempre, sia in caso di successo che di errore
+            if (document.body.contains(exportContainer)) {
                 document.body.removeChild(exportContainer);
-                exportButton.disabled = false;
-                exportButton.innerHTML = originalButtonHTML;
-            });
-        }, 0);
+            }
+            exportButton.disabled = false;
+            exportButton.innerHTML = originalButtonHTML;
+        }
     }
 
     function setupStickyToolbar() {
