@@ -229,23 +229,13 @@ document.addEventListener('DOMContentLoaded', () => {
         downloadAnchorNode.remove();
     }
 
-    // --- NUOVA FUNZIONE PER LA TOOLBAR STICKY ---
     function setupStickyToolbar() {
         const toolbar = document.querySelector('.filter-toolbar');
         if (!toolbar) return;
-        
-        const observer = new IntersectionObserver(
-            ([e]) => {
-                // Se l'elemento non è più visibile nella parte superiore del viewport, è "stuck"
-                e.target.classList.toggle('is-stuck', e.intersectionRatio < 1);
-            },
-            { threshold: [1] } // L'evento si attiva quando l'elemento entra/esce completamente dalla vista
-        );
-        
+        const observer = new IntersectionObserver(([e]) => e.target.classList.toggle('is-stuck', e.intersectionRatio < 1), { threshold: [1] });
         observer.observe(toolbar);
     }
 
-    // --- EVENT LISTENERS ---
     filmContainer.addEventListener('click', handleContainerClick);
     themeToggleBtn.addEventListener('click', toggleTheme);
     window.addEventListener('scroll', handleScroll);
@@ -257,10 +247,9 @@ document.addEventListener('DOMContentLoaded', () => {
     markAllSeenBtn.addEventListener('click', markAllVisibleAsSeen);
     resetAllBtn.addEventListener('click', resetAllData);
 
-    // --- INIZIALIZZAZIONE ---
     loadState();
     populateCategoryFilter();
     renderMovies();
     updateStatsDashboard();
-    setupStickyToolbar(); // Avvia la logica per la toolbar sticky
+    setupStickyToolbar();
 });
