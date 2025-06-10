@@ -1,0 +1,82 @@
+/* Stili che verranno applicati SOLO durante la stampa o l'esportazione in PDF */
+@media print {
+    /* Impostazioni globali della pagina */
+    body {
+        font-family: 'Lato', sans-serif;
+        color: #333333;
+        background-color: #ffffff;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Intestazione del PDF */
+    .pdf-header {
+        text-align: center;
+        border-bottom: 2px solid #9d4edd; /* --magic-purple */
+        padding-bottom: 15px;
+        margin-bottom: 20px;
+    }
+
+    .pdf-header h1 {
+        font-family: 'Cinzel', serif;
+        color: #0d1b2a;
+        margin: 0 0 5px 0;
+        font-size: 24pt;
+    }
+
+    .pdf-header p {
+        color: #6c757d;
+        margin: 0;
+        font-size: 10pt;
+    }
+
+    /* Stile della tabella dei film */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+        font-size: 9pt; /* Riduciamo la dimensione per farci stare più dati */
+    }
+
+    th, td {
+        border: 1px solid #dee2e6;
+        padding: 10px;
+        text-align: left;
+        /* Permette alle parole lunghe di andare a capo */
+        word-break: break-word;
+    }
+
+    th {
+        background-color: #1b263b; /* --dark-card */
+        color: #e0e1dd; /* --dark-primary-text */
+        font-weight: bold;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f8f9fa; /* Sfondo alternato per le righe */
+    }
+    
+    .pdf-rating-stars {
+        color: #ffc107; /* --accent-color */
+        font-size: 11pt;
+    }
+
+    .pdf-rating-stars .fa-star,
+    .pdf-rating-stars .fa-star-half-alt {
+        margin-right: 2px;
+    }
+    
+    /* Per il preferito */
+    td .fa-star {
+        color: #ffc107; /* --accent-color */
+        font-size: 11pt;
+    }
+
+    /* Piè di pagina */
+    .pdf-footer {
+        text-align: center;
+        margin-top: 25px;
+        font-size: 9pt;
+        color: #a8b2d1;
+    }
+}

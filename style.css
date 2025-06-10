@@ -145,3 +145,4 @@ header::after, .film-category h2::after { content: ''; position: absolute; left:
     .theme-toggle-btn { top: 15px; right: 15px; width: 40px; height: 40px; }
     #scroll-to-top { width: 40px; height: 40px; font-size: 1.1rem; bottom: 15px; right: 15px; }
 }
+
