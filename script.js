@@ -282,7 +282,10 @@ document.addEventListener('DOMContentLoaded', () => {
     modalCloseBtn.addEventListener('click', closeModal);
     window.addEventListener('click', (e) => { if (e.target == modal) closeModal(); });
     exportBtn.addEventListener('click', exportSeenMovies);
-    searchInput.addEventListener('input', () => setTimeout(renderMovies, 300));
+    searchInput.addEventListener('input', () => {
+        clearTimeout(window.searchTimeout);
+        window.searchTimeout = setTimeout(renderMovies, 300); // Debounce
+    });
     categoryFilter.addEventListener('change', renderMovies);
     markAllSeenBtn.addEventListener('click', markAllVisibleAsSeen);
     resetAllBtn.addEventListener('click', resetAllData);

@@ -68,7 +68,7 @@ body.light-mode .stats-dashboard { background-color: var(--light-card); }
 .stat-label { font-size: 0.9rem; color: var(--dark-secondary-text); margin-top: 0.5rem; }
 .filter-toolbar {
     display: flex; flex-wrap: wrap; gap: 1rem; align-items: center;
-    max-width: 900px; margin: -1rem auto 2rem auto; padding: 1rem;
+    max-width: 900px; margin: -1rem auto 2rem auto; padding: 1.5rem;
     background: var(--dark-card); border-radius: 16px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.2);
 }
@@ -83,8 +83,8 @@ body.light-mode .filter-toolbar { background: var(--light-card); }
 body.light-mode .filter-toolbar input, body.light-mode .filter-toolbar select { background-color: var(--light-bg); color: var(--light-primary-text); }
 .toolbar-btn {
     padding: 12px 20px; border: none; border-radius: 25px; cursor: pointer;
-    font-size: 0.9rem; font-weight: 600; display: flex; align-items: center; gap: 8px;
-    transition: transform 0.2s ease-out, background-color 0.2s ease, box-shadow 0.2s ease;
+    font-size: 0.9rem; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px;
+    transition: transform 0.2s ease-out, background-color 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
 }
 .toolbar-btn:active { transform: scale(0.95); }
 .toolbar-btn.primary { background-color: var(--magic-purple); color: white; }
@@ -115,6 +115,7 @@ body.light-mode .filter-toolbar input, body.light-mode .filter-toolbar select { 
 }
 body.light-mode .movie-card { background: var(--light-card); border-color: #dee2e6; }
 .movie-card:hover { transform: translateY(-5px); border-color: var(--info-color); }
+.movie-card:active { transform: translateY(-2px) scale(0.99); }
 .movie-card::after {
     content: ''; position: absolute; top: -2px; left: -2px;
     width: calc(100% + 4px); height: calc(100% + 4px);
@@ -264,11 +265,14 @@ header::after, .film-category h2::after {
 @media (max-width: 768px) {
     .stats-dashboard {
         grid-template-columns: 1fr;
-        gap: 1.5rem;
+        gap: 1rem;
+        padding: 1rem; /* --- OTTIMIZZAZIONE --- */
+        margin: 1.5rem auto;
     }
     .filter-toolbar {
         flex-direction: column;
         align-items: stretch;
+        padding: 1rem; /* --- OTTIMIZZAZIONE --- */
     }
 }
 @media (max-width: 600px) {
@@ -280,16 +284,22 @@ header::after, .film-category h2::after {
     }
     .film-grid {
         grid-template-columns: 1fr;
-        gap: 1.2rem;
+        gap: 1rem; /* --- OTTIMIZZAZIONE --- */
     }
     .toolbar-btn {
-        font-size: 0.9rem;
-        padding: 10px 15px;
+        font-size: 0.9rem; /* --- OTTIMIZZAZIONE --- */
+        padding: 12px 15px; /* Aumenta l'area di tocco */
         width: 100%;
         box-sizing: border-box;
     }
     .modal-content {
-        padding: 1.5rem;
+        padding: 1.5rem 1rem; /* --- OTTIMIZZAZIONE --- */
         width: 100%;
+    }
+    .fav-btn:hover {
+        transform: none; /* Disabilita l'ingrandimento hover su mobile */
+    }
+    .movie-card:hover {
+        transform: none; /* Disabilita il sollevamento hover su mobile */
     }
 }
