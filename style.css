@@ -3,6 +3,7 @@
 /* =================================================================== */
 :root {
     --dark-bg: #0d1b2a; --dark-card: #1b263b; --dark-primary-text: #e0e1dd; --dark-secondary-text: #a8b2d1;
+    --dark-card-stuck: #2a3a50; /* Leggermente più chiaro per lo stato sticky */
     --light-bg: #f8f9fa; --light-card: #ffffff; --light-primary-text: #212529; --light-secondary-text: #6c757d;
     --accent-color: #ffc107; --accent-hover: #ffca2c; --success-color: #28a745; --info-color: #007bff;
     --magic-purple: #9d4edd; --royal-gold: #fca311; --info-color-rgb: 0, 123, 255;
@@ -15,25 +16,26 @@ body.light-mode { background-color: var(--light-bg); color: var(--light-primary-
 /* =================================================================== */
 @keyframes scaleIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
 @keyframes modalEnter { from { opacity: 0; transform: translateY(-25px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
-header {
-    background-image: linear-gradient(rgba(13, 27, 42, 0.7), rgba(13, 27, 42, 0.5)), url('images/header-bg.jpg');
-    background-size: cover; background-position: center; text-align: center; padding: 4rem 1.5rem;
-    color: white; position: relative; border-bottom: 3px solid transparent;
-}
+header { background-image: linear-gradient(rgba(13, 27, 42, 0.7), rgba(13, 27, 42, 0.5)), url('images/header-bg.jpg'); background-size: cover; background-position: center; text-align: center; padding: 4rem 1.5rem; color: white; position: relative; border-bottom: 3px solid transparent; }
 header h1 { font-family: 'Cinzel', serif; font-size: clamp(2.5rem, 10vw, 3.5rem); margin: 0; text-shadow: 2px 2px 8px rgba(0,0,0,0.7); }
 .stats-dashboard { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; max-width: 900px; margin: 2rem auto; padding: 1.5rem; background-color: var(--dark-card); border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
 body.light-mode .stats-dashboard { background-color: var(--light-card); }
 .stat-card { text-align: center; }
 .stat-number { font-size: clamp(1.8rem, 7vw, 2.5rem); font-weight: 700; font-family: 'Cinzel', serif; color: var(--accent-hover); }
 .stat-label { font-size: 0.9rem; color: var(--dark-secondary-text); margin-top: 0.5rem; }
-.filter-toolbar { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; max-width: 900px; margin: -1rem auto 2rem auto; padding: 1.5rem; background: var(--dark-card); border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+
+/* =================================================================== */
+/* ==   TOOLBAR FILTRI OTTIMIZZATA CON STICKY   == */
+/* =================================================================== */
+.filter-toolbar { display: flex; align-items: center; gap: 0.8rem; max-width: 900px; margin: -1rem auto 2rem auto; padding: 1rem; background: var(--dark-card); border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); flex-wrap: nowrap; /* --- MODIFICA CHIAVE: Sticky styles --- */ position: sticky; top: 0; z-index: 1000; transition: background-color 0.3s ease, box-shadow 0.3s ease, padding 0.3s ease; }
+.filter-toolbar.is-stuck { background-color: var(--dark-card-stuck); box-shadow: 0 5px 20px rgba(0,0,0,0.3); padding: 0.8rem 1rem; border-radius: 0 0 16px 16px; }
 body.light-mode .filter-toolbar { background: var(--light-card); }
-/* --- MODIFICA CHIAVE: Fix per l'icona del filtro --- */
-.input-wrapper { display: flex; align-items: center; position: relative; flex-grow: 1; background-color: var(--dark-bg); border-radius: 25px; border: 2px solid var(--accent-color); }
+body.light-mode .filter-toolbar.is-stuck { background-color: rgba(255, 255, 255, 0.95); backdrop-filter: blur(5px); }
+.input-wrapper { display: flex; align-items: center; position: relative; flex-grow: 1; flex-shrink: 1; min-width: 150px; background-color: var(--dark-bg); border-radius: 25px; border: 2px solid var(--accent-color); }
 body.light-mode .input-wrapper { background-color: var(--light-bg); }
-.input-wrapper i { position: static; padding-left: 15px; color: var(--dark-secondary-text); flex-shrink: 0; }
+.input-wrapper i { padding-left: 15px; color: var(--dark-secondary-text); }
 .filter-toolbar input, .filter-toolbar select { width: 100%; padding: 12px 15px 12px 10px; border: none; background-color: transparent; color: var(--dark-primary-text); font-size: 1rem; -webkit-appearance: none; appearance: none; }
-.toolbar-btn { padding: 12px 20px; border: none; border-radius: 25px; cursor: pointer; font-size: 0.9rem; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; transition: transform 0.2s ease, filter 0.2s ease; }
+.toolbar-btn { padding: 12px 15px; border: none; border-radius: 25px; cursor: pointer; font-size: 0.9rem; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; transition: transform 0.2s ease, filter 0.2s ease; flex-shrink: 0; white-space: nowrap; }
 .toolbar-btn:active { transform: scale(0.95); }
 .toolbar-btn.primary { background-color: var(--magic-purple); color: white; }
 .toolbar-btn.primary:hover { filter: brightness(1.2); }
@@ -43,9 +45,9 @@ body.light-mode .input-wrapper { background-color: var(--light-bg); }
 .toolbar-btn.accent:hover { filter: brightness(1.1); }
 
 /* =================================================================== */
-/* ==   🃏 STILE MOVIE CARD   == */
+/* ==   STILE MOVIE CARD   == */
 /* =================================================================== */
-#film-container { max-width: 1200px; margin: 2rem auto; padding: 0 1.5rem; }
+#film-container { max-width: 900px; margin: 2rem auto; padding: 0 1.5rem; /* --- MODIFICA CHIAVE: Allineamento con il resto --- */ }
 .film-category h2 { font-family: 'Cinzel', serif; padding-bottom: 0.5rem; margin-bottom: 1.5rem; position: relative; border-bottom: 2px solid transparent; }
 .film-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.8rem; }
 .movie-card { background: var(--dark-card); border-radius: 16px; padding: 1rem; position: relative; border: 1px solid transparent; transition: transform 0.3s ease, border-color 0.3s ease; }
@@ -78,7 +80,7 @@ body.light-mode .movie-card { background: var(--light-card); border-color: #dee2
 .rating-stars .far.fa-star { color: var(--dark-secondary-text); }
 
 /* =================================================================== */
-/* ==   🔮 MODALE, PULSANTI FLUTTUANTI E ALTRI COMPONENTI   == */
+/* ==   MODALE E PULSANTI FLUTTUANTI   == */
 /* =================================================================== */
 .modal { display: none; align-items: center; justify-content: center; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.8); padding: 1rem; }
 .modal-content { background-color: var(--dark-card); margin: auto; padding: 2rem; width: 90%; max-width: 600px; border-radius: 12px; position: relative; animation: modalEnter 0.4s ease-out; display: flex; flex-direction: column; }
@@ -94,7 +96,6 @@ body.light-mode .modal-content textarea, body.light-mode .modal-content input { 
 .close-btn:hover { color: var(--royal-gold); transform: scale(1.1); }
 #save-modal-btn { width: 100%; padding: 12px; font-size: 1.1rem; margin-top: 1rem; background-color: var(--info-color); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; transition: filter 0.2s ease, transform 0.2s ease; }
 #save-modal-btn:hover { filter: brightness(1.15); transform: translateY(-2px); }
-/* --- MODIFICA CHIAVE: Separazione stili dei due pulsanti --- */
 .theme-toggle-btn { position: absolute; top: 20px; right: 20px; background: none; border: 2px solid white; color: white; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; transition: all 0.3s ease; }
 .theme-toggle-btn:hover { background-color: rgba(255, 255, 255, 0.2); transform: scale(1.15) rotate(15deg); }
 #scroll-to-top { position: fixed; bottom: 20px; right: 20px; color: white; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; display: none; align-items: center; justify-content: center; font-size: 1.2rem; z-index: 1000; background-color: var(--magic-purple); opacity: 0; transition: opacity 0.3s ease, transform 0.3s ease; }
@@ -110,18 +111,18 @@ header::after, .film-category h2::after { content: ''; position: absolute; left:
 /* =================================================================== */
 /* ==   📱 STILI RESPONSIVE PER MOBILE   == */
 /* =================================================================== */
-@media (max-width: 768px) {
+@media (max-width: 920px) {
+    .filter-toolbar { flex-wrap: wrap; }
     .stats-dashboard { grid-template-columns: 1fr; gap: 1rem; padding: 1rem; margin: 1.5rem auto; }
-    .filter-toolbar { flex-direction: column; align-items: stretch; padding: 1rem; }
 }
 @media (max-width: 600px) {
     header { padding: 3rem 1rem; }
     #film-container { padding: 0 1rem; }
     .film-grid { grid-template-columns: 1fr; gap: 1rem; }
+    .filter-toolbar { flex-direction: column; align-items: stretch; padding: 1rem; position: static; /* Disabilita sticky su mobile */ }
     .toolbar-btn { font-size: 0.9rem; padding: 12px 15px; width: 100%; box-sizing: border-box; }
     .modal-content { padding: 1.5rem 1rem; width: 100%; }
-    .movie-card:hover { transform: none; }
-    .fav-btn:hover { transform: none; }
+    .movie-card:hover, .fav-btn:hover { transform: none; }
     .theme-toggle-btn { top: 15px; right: 15px; width: 40px; height: 40px; }
     #scroll-to-top { width: 40px; height: 40px; font-size: 1.1rem; bottom: 15px; right: 15px; }
 }
