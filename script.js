@@ -55,13 +55,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const searchTerm = searchInput.value.toLowerCase();
         const selectedCategory = categoryFilter.value;
         const filteredList = filmList.filter(movie => movie.title.toLowerCase().includes(searchTerm) && (selectedCategory === 'all' || movie.category === selectedCategory));
-
         currentlyVisibleFilmIds = filteredList.map(m => m.id);
         const groupedMovies = filteredList.reduce((acc, movie) => { (acc[movie.category] = acc[movie.category] || []).push(movie); return acc; }, {});
-        
         filmContainer.innerHTML = ''; 
         if (filteredList.length === 0) { filmContainer.innerHTML = `<p class="no-results">Nessun film trovato.</p>`; return; }
-
         for (const category in groupedMovies) {
             const categorySection = document.createElement('section');
             categorySection.className = 'film-category';
@@ -107,7 +104,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const completionEl = document.getElementById('stats-completion-percentage');
         const totalCanonicalMovies = filmList.filter(f => f.category.includes("Anni")).length;
         let totalSeenCount = 0, canonicalSeenCount = 0, favoriteCount = 0;
-    
         for (const id in appState.movies) {
             const state = appState.movies[id];
             if (state.favorite) favoriteCount++;
@@ -130,7 +126,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const action = e.target.closest('[data-action]')?.dataset.action;
         appState.movies[movieId] = appState.movies[movieId] || {};
         const movieState = appState.movies[movieId];
-
         if (action === 'toggle-seen') {
             movieState.seen = e.target.checked;
             if (movieState.seen && !movieState.dateSeen) movieState.dateSeen = new Date().toLocaleDateString('it-IT');
@@ -151,9 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function markAllVisibleAsSeen() {
-        currentlyVisibleFilmIds.forEach(id => {
-            appState.movies[id] = { ...appState.movies[id], seen: true, dateSeen: appState.movies[id]?.dateSeen || new Date().toLocaleDateString('it-IT') };
-        });
+        currentlyVisibleFilmIds.forEach(id => { appState.movies[id] = { ...appState.movies[id], seen: true, dateSeen: appState.movies[id]?.dateSeen || new Date().toLocaleDateString('it-IT') }; });
         saveState();
         renderMovies();
         updateStatsDashboard();
@@ -180,7 +173,6 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="form-group"><label for="movie-rating">Voto (da 1 a 5):</label><input type="number" id="movie-rating" min="0.5" max="5" step="0.5" value="${movieState.rating || ''}"></div>
             <button id="save-modal-btn" class="action-btn">Salva Ricordo</button>`;
         modal.style.display = 'flex';
-        
         document.getElementById('save-modal-btn').addEventListener('click', () => {
             const state = appState.movies[movieId] || {};
             state.note = document.getElementById('movie-note').value;
@@ -212,13 +204,20 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
-    // ========== NUOVA FUNZIONE PER ESPORTARE IN PDF ==========
+    // ========== FUNZIONE ESPORTAZIONE PDF CORRETTA E CON FEEDBACK ==========
     function exportSeenMovies() {
+        const exportButton = document.getElementById('export-btn');
+        const originalButtonHTML = exportButton.innerHTML;
+
         const seenMovies = filmList.filter(film => appState.movies[film.id]?.seen);
         if (seenMovies.length === 0) {
             alert("Nessun film è stato ancora segnato come visto!");
             return;
         }
+        
+        // --- FEEDBACK PER L'UTENTE ---
+        exportButton.disabled = true;
+        exportButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creazione...';
 
         const exportContainer = document.createElement('div');
         exportContainer.className = 'pdf-export-container';
@@ -233,45 +232,33 @@ document.addEventListener('DOMContentLoaded', () => {
                     <td>${state.dateSeen || 'N/D'}</td>
                     <td class="pdf-rating-stars">${generateRatingStars(state.rating)}</td>
                     <td>${state.favorite ? '<i class="fas fa-star"></i>' : '-'}</td>
-                </tr>
-            `;
+                </tr>`;
         });
 
         exportContainer.innerHTML = `
-            <div class="pdf-header">
-                <h1>Momento Film</h1>
-                <p>La Nostra Avventura Disney - Esportato il ${today}</p>
-            </div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Titolo</th>
-                        <th>Visto il</th>
-                        <th>Voto</th>
-                        <th>Preferito</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${tableRowsHTML}
-                </tbody>
-            </table>
-            <div class="pdf-footer">
-                <p>Grazie per aver condiviso questi momenti!</p>
-            </div>
-        `;
+            <div class="pdf-header"><h1>Momento Film</h1><p>La Nostra Avventura Disney - Esportato il ${today}</p></div>
+            <table><thead><tr><th>Titolo</th><th>Visto il</th><th>Voto</th><th>Preferito</th></tr></thead><tbody>${tableRowsHTML}</tbody></table>
+            <div class="pdf-footer"><p>Grazie per aver condiviso questi momenti!</p></div>`;
+        
         document.body.appendChild(exportContainer);
+        
+        // --- FIX: Attendiamo che il DOM sia pronto prima di generare il PDF ---
+        setTimeout(() => {
+            const options = {
+                margin: [10, 10, 15, 10], filename: `Momento Film - ${today.replace(/\//g, '-')}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2, useCORS: true },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
 
-        const options = {
-            margin: [10, 10, 15, 10], // [top, left, bottom, right] in mm
-            filename: `Momento Film - ${today.replace(/\//g, '-')}.pdf`,
-            image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { scale: 2, useCORS: true },
-            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-        };
-
-        html2pdf().from(exportContainer).set(options).save().then(() => {
-            document.body.removeChild(exportContainer);
-        });
+            html2pdf().from(exportContainer).set(options).save().catch(err => {
+                console.error("Errore durante la creazione del PDF:", err);
+                alert("Si è verificato un errore durante la creazione del PDF.");
+            }).finally(() => {
+                document.body.removeChild(exportContainer);
+                exportButton.disabled = false;
+                exportButton.innerHTML = originalButtonHTML;
+            });
+        }, 0);
     }
 
     function setupStickyToolbar() {
