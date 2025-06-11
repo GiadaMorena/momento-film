@@ -22,16 +22,15 @@
         <section class="filter-toolbar">
             <div class="input-wrapper"><i class="fas fa-search"></i><input type="text" id="search-input" placeholder="Cerca il tuo prossimo film..."></div>
             <div class="input-wrapper"><i class="fas fa-filter"></i><select id="category-filter"></select></div>
-            <button id="mark-all-seen-btn" class="toolbar-btn primary"><i class="fas fa-check-double"></i> Segna Visti</button>
+            <!-- Pulsante "Segna Visti" RIMOSSO -->
             <button id="reset-all-btn" class="toolbar-btn secondary"><i class="fas fa-sync-alt"></i> Nuovo Inizio</button>
-            <button id="export-btn" class="toolbar-btn accent"><i class="fas fa-download"></i> Esporta Dati</button>
-            <button id="random-pick-btn" class="toolbar-btn accent"><i class="fas fa-wand-magic-sparkles"></i> Momento Magico</button>
+            <button id="export-btn" class="toolbar-btn"><i class="fas fa-download"></i> Esporta Dati</button>
+            <button id="random-pick-btn" class="toolbar-btn"><i class="fas fa-wand-magic-sparkles"></i> Momento Magico</button>
         </section>
         <div id="film-container"></div>
     </main>
     <a href="#" id="scroll-to-top" class="scroll-to-top-btn" aria-label="Torna in cima"><i class="fas fa-arrow-up"></i></a>
     <div id="movie-modal" class="modal"><div class="modal-content"><span class="close-btn" aria-label="Chiudi modale">×</span><div id="modal-body"></div></div></div>
-    <!-- Nuovo Modale per il Film Casuale -->
     <div id="random-pick-modal" class="modal"><div class="modal-content random-pick-content"><span class="close-btn" aria-label="Chiudi modale">×</span><div id="random-pick-body"></div></div></div>
     <script src="script.js" defer></script>
 </body>
