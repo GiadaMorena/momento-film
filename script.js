@@ -31,7 +31,53 @@ document.addEventListener('DOMContentLoaded', () => {
     function toggleTheme() { appState.theme = appState.theme === 'dark' ? 'light' : 'dark'; document.body.className = `${appState.theme}-mode`; updateThemeIcon(); saveState(); }
     function updateThemeIcon() { if (themeToggleBtn) { const icon = themeToggleBtn.querySelector('i'); if (icon) icon.className = appState.theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon'; } }
     function handleScroll() { if (!scrollToTopBtn) return; if (window.scrollY > 300) { scrollToTopBtn.style.display = 'flex'; scrollToTopBtn.style.opacity = '1'; } else { scrollToTopBtn.style.opacity = '0'; setTimeout(() => { if (window.scrollY <= 300) scrollToTopBtn.style.display = 'none'; }, 300); } }
-    async function exportSeenMovies() { const seenMovies = filmList.filter(film => appState.movies[film.id]?.seen); if (seenMovies.length === 0) { alert("Nessun film è stato ancora segnato come visto!"); return; } let pdfStyles = ''; try { const response = await fetch('pdf-styles.css'); if (!response.ok) throw new Error(`Errore HTTP: ${response.status}`); pdfStyles = await response.text(); } catch (error) { console.error("Impossibile caricare pdf-styles.css:", error); alert("Errore: impossibile generare l'esportazione. Controlla che il file pdf-styles.css sia presente e accessibile."); return; } const today = new Date(); const formattedDate = `${today.getDate().toString().padStart(2, '0')}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getFullYear()}`; const printWindow = window.open('', '_blank'); const favorites = seenMovies.filter(movie => appState.movies[movie.id]?.favorite); const others = seenMovies.filter(movie => !appState.movies[movie.id]?.favorite); const createCardHTML = (movie) => { const state = appState.movies[movie.id]; return `<div class="pdf-movie-card ${state.favorite ? 'is-favorite-pdf' : ''}"><h3 class="pdf-movie-title">${movie.title} <span class="pdf-movie-year">(${movie.year})</span></h3><div class="pdf-info-grid"><div class="pdf-info-item"><span class="pdf-info-label">Data Visione</span><span class="pdf-info-value">${state.dateSeen || 'N/D'}</span></div><div class="pdf-info-item"><span class="pdf-info-label">Valutazione</span><span class="pdf-info-value pdf-rating-stars">${generateRatingStars(state.rating)}</span></div></div>${state.note ? `<div class="pdf-notes"><span class="pdf-info-label">Il nostro ricordo:</span><p>${state.note}</p></div>` : ''}</div>`; }; const logoUrl = 'images/logo_bianco.png'; const logoHTML = `<img src="${logoUrl}" class="pdf-logo" alt="Logo">`; const favoritesHTML = favorites.length > 0 ? `<div class="pdf-section"><h2 class="pdf-section-title"><i class="fas fa-star"></i> I Nostri Momenti Preferiti</h2><div class="pdf-card-grid">${favorites.map(createCardHTML).join('')}</div></div>` : ''; const othersHTML = others.length > 0 ? `<div class="pdf-section"><h2 class="pdf-section-title"><i class="fas fa-film"></i> Il Diario del Nostro Viaggio</h2><div class="pdf-card-grid">${others.map(createCardHTML).join('')}</div></div>` : ''; const magicDustHTML = `<div class="magic-dust"><i class="fas fa-star"></i><i class="fas fa-heart"></i><i class="fas fa-magic-wand-sparkles"></i><i class="fas fa-star"></i><i class="fas fa-music"></i><i class="fas fa-heart"></i><i class="fas fa-magic-wand-sparkles"></i><i class="fas fa-star"></i><i class="fas fa-heart"></i><i class="fas fa-music"></i><i class="fas fa-star"></i><i class="fas fa-magic-wand-sparkles"></i></div>`; const contentHTML = `<div class="pdf-cover-page"><div class="pdf-cover-content">${logoHTML}<h1 class="logo-text">Momento Film</h1><p class="tagline">Il riepilogo della nostra avventura Disney</p></div>${magicDustHTML}</div>${favoritesHTML ? `<div class="pdf-page-break"></div>${favoritesHTML}` : ''}${othersHTML ? `<div class="pdf-page-break"></div>${othersHTML}` : ''}`; printWindow.document.write(`<!DOCTYPE html><html lang="it"><head><meta charset="UTF-8"><title>Momento Film - Riepilogo ${formattedDate}</title><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@400;700&display=swap" rel="stylesheet"><style>${pdfStyles}</style></head><body>${contentHTML}<div class="pdf-footer">Un viaggio magico, un ricordo alla volta.</div><script>window.onload = function() { setTimeout(() => { window.print(); window.close(); }, 500); }<\/script></body></html>`); printWindow.document.close(); }
+    
+    // === FUNZIONE DI ESPORTAZIONE CORRETTA PER MOBILE ===
+    async function exportSeenMovies() {
+        const seenMovies = filmList.filter(film => appState.movies[film.id]?.seen);
+        if (seenMovies.length === 0) {
+            alert("Nessun film è stato ancora segnato come visto!");
+            return;
+        }
+
+        // 1. Apri subito la finestra e mostra un messaggio di caricamento
+        const printWindow = window.open('', '_blank');
+        if (!printWindow) {
+            alert("Per favore, abilita i popup per questo sito per poter esportare i dati.");
+            return;
+        }
+        printWindow.document.write('<html><head><title>Generazione Riepilogo...</title><style>body{font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background: #0d1b2a; color: white;} p{font-size: 1.5rem;}</style></head><body><p>Sto preparando il tuo riepilogo magico...</p></body></html>');
+        
+        // 2. Ora esegui le operazioni asincrone
+        let pdfStyles = '';
+        try {
+            const response = await fetch('pdf-styles.css');
+            if (!response.ok) throw new Error(`Errore HTTP: ${response.status}`);
+            pdfStyles = await response.text();
+        } catch (error) {
+            console.error("Impossibile caricare pdf-styles.css:", error);
+            printWindow.document.body.innerHTML = '<h1>Errore nella generazione del PDF. Chiudi questa finestra e riprova.</h1>';
+            return;
+        }
+
+        // 3. Costruisci l'HTML finale (codice invariato)
+        const today = new Date();
+        const formattedDate = `${today.getDate().toString().padStart(2, '0')}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getFullYear()}`;
+        const favorites = seenMovies.filter(movie => appState.movies[movie.id]?.favorite);
+        const others = seenMovies.filter(movie => !appState.movies[movie.id]?.favorite);
+        const createCardHTML = (movie) => { const state = appState.movies[movie.id]; return `<div class="pdf-movie-card ${state.favorite ? 'is-favorite-pdf' : ''}"><h3 class="pdf-movie-title">${movie.title} <span class="pdf-movie-year">(${movie.year})</span></h3><div class="pdf-info-grid"><div class="pdf-info-item"><span class="pdf-info-label">Data Visione</span><span class="pdf-info-value">${state.dateSeen || 'N/D'}</span></div><div class="pdf-info-item"><span class="pdf-info-label">Valutazione</span><span class="pdf-info-value pdf-rating-stars">${generateRatingStars(state.rating)}</span></div></div>${state.note ? `<div class="pdf-notes"><span class="pdf-info-label">Il nostro ricordo:</span><p>${state.note}</p></div>` : ''}</div>`; };
+        const logoUrl = 'images/logo_bianco.png'; const logoHTML = `<img src="${logoUrl}" class="pdf-logo" alt="Logo">`;
+        const favoritesHTML = favorites.length > 0 ? `<div class="pdf-section"><h2 class="pdf-section-title"><i class="fas fa-star"></i> I Nostri Momenti Preferiti</h2><div class="pdf-card-grid">${favorites.map(createCardHTML).join('')}</div></div>` : '';
+        const othersHTML = others.length > 0 ? `<div class="pdf-section"><h2 class="pdf-section-title"><i class="fas fa-film"></i> Il Diario del Nostro Viaggio</h2><div class="pdf-card-grid">${others.map(createCardHTML).join('')}</div></div>` : '';
+        const magicDustHTML = `<div class="magic-dust"><i class="fas fa-star"></i><i class="fas fa-heart"></i><i class="fas fa-magic-wand-sparkles"></i><i class="fas fa-star"></i><i class="fas fa-music"></i><i class="fas fa-heart"></i><i class="fas fa-magic-wand-sparkles"></i><i class="fas fa-star"></i><i class="fas fa-heart"></i><i class="fas fa-music"></i><i class="fas fa-star"></i><i class="fas fa-magic-wand-sparkles"></i></div>`;
+        const contentHTML = `<div class="pdf-cover-page"><div class="pdf-cover-content">${logoHTML}<h1 class="logo-text">Momento Film</h1><p class="tagline">Il riepilogo della nostra avventura Disney</p></div>${magicDustHTML}</div>${favoritesHTML ? `<div class="pdf-page-break"></div>${favoritesHTML}` : ''}${othersHTML ? `<div class="pdf-page-break"></div>${othersHTML}` : ''}`;
+
+        // 4. Scrivi il contenuto finale nella finestra già aperta
+        printWindow.document.open();
+        printWindow.document.write(`<!DOCTYPE html><html lang="it"><head><meta charset="UTF-8"><title>Momento Film - Riepilogo ${formattedDate}</title><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@400;700&display=swap" rel="stylesheet"><style>${pdfStyles}</style></head><body>${contentHTML}<div class="pdf-footer">Un viaggio magico, un ricordo alla volta.</div><script>window.onload = function() { setTimeout(() => { window.print(); window.close(); }, 500); }<\/script></body></html>`);
+        printWindow.document.close();
+    }
+
     function pickRandomMovie() { const unseenMovies = filmList.filter(film => !appState.movies[film.id]?.seen && typeof film.year === 'number' && film.year <= new Date().getFullYear()); if (unseenMovies.length === 0) { randomPickModalBody.innerHTML = `<h2>Congratulazioni!</h2><p class="picked-movie-title" style="font-size: 1.5rem; animation: none; text-shadow: none; color: var(--dark-primary-text);">Hai già visto tutti i film disponibili!</p><p>È tempo di attendere le prossime uscite Disney!</p>`; } else { const pickedMovie = unseenMovies[Math.floor(Math.random() * unseenMovies.length)]; randomPickModalBody.innerHTML = `<h2>Il Prossimo Momento Magico è...</h2><div class="picked-movie-title">${pickedMovie.title}</div><p class="picked-movie-year">(${pickedMovie.year})</p>`; } randomPickModal.style.display = 'flex'; }
     function setupStickyToolbar() { const toolbar = document.querySelector('.filter-toolbar'); if (!toolbar) return; const observer = new IntersectionObserver(([e]) => e.target.classList.toggle('is-stuck', e.intersectionRatio < 1), { threshold: [1] }); observer.observe(toolbar); }
     filmContainer.addEventListener('click', handleContainerClick);
