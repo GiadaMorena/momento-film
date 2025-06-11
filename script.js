@@ -11,6 +11,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const exportBtn = document.getElementById('export-btn');
     const searchInput = document.getElementById('search-input');
     const categoryFilter = document.getElementById('category-filter');
+    const sortOrderSelect = document.getElementById('sort-order');
+    const sortIcon = document.getElementById('sort-icon');
     const resetAllBtn = document.getElementById('reset-all-btn');
     const randomPickBtn = document.getElementById('random-pick-btn');
     const randomPickModal = document.getElementById('random-pick-modal');
@@ -21,37 +23,104 @@ document.addEventListener('DOMContentLoaded', () => {
     function saveState() { localStorage.setItem('momentoFilmState', JSON.stringify(appState)); }
     function generateRatingStars(rating) { let starsHTML = ''; const numRating = parseFloat(rating); if (isNaN(numRating) || numRating < 0.5) return 'Nessun voto'; for (let i = 1; i <= 5; i++) { if (numRating >= i) starsHTML += '<i class="fas fa-star"></i>'; else if (numRating >= i - 0.5) starsHTML += '<i class="fas fa-star-half-alt"></i>'; else starsHTML += '<i class="far fa-star"></i>'; } return starsHTML; }
     function getSeenDetailsHTML(movieState) { return ` <div class="card-body"> <div class="info-row"><i class="fas fa-calendar-alt"></i><span>Visto il ${movieState.dateSeen || 'N/D'}</span></div> <div class="info-row"><i class="fas fa-poll"></i><div class="rating-stars">${generateRatingStars(movieState.rating)}</div></div> <div class="info-row"><i class="fas fa-comment-dots"></i><span>${movieState.note ? movieState.note.substring(0, 25) + (movieState.note.length > 25 ? '...' : '') : 'Nessun ricordo'}</span></div> </div>`; }
-    function renderMovies() { if (!filmContainer) return; const searchTerm = searchInput.value.toLowerCase(); const selectedCategory = categoryFilter.value; const filteredList = filmList.filter(movie => movie.title.toLowerCase().includes(searchTerm) && (selectedCategory === 'all' || movie.category === selectedCategory)); currentlyVisibleFilmIds = filteredList.map(m => m.id); const groupedMovies = filteredList.reduce((acc, movie) => { (acc[movie.category] = acc[movie.category] || []).push(movie); return acc; }, {}); filmContainer.innerHTML = ''; if (filteredList.length === 0) { filmContainer.innerHTML = `<p class="no-results">Nessun film trovato.</p>`; return; } for (const category in groupedMovies) { const categorySection = document.createElement('section'); categorySection.className = 'film-category'; categorySection.innerHTML = `<h2>${category}</h2>`; const grid = document.createElement('div'); grid.className = 'film-grid'; groupedMovies[category].forEach(movie => { const movieState = appState.movies[movie.id] || {}; const isSeen = !!movieState.seen; const isFavorite = !!movieState.favorite; const card = document.createElement('div'); card.className = `movie-card ${isSeen ? 'is-seen' : ''} ${isFavorite ? 'is-favorite' : ''}`; card.dataset.id = movie.id; card.innerHTML = ` <div class="card-header"> <label class="custom-checkbox"><input type="checkbox" data-action="toggle-seen" ${isSeen ? 'checked' : ''}><span class="checkmark"></span></label> <div class="title-year"><div class="movie-title">${movie.title}</div><div class="movie-year">(${movie.year})</div></div> <button class="fav-btn ${isFavorite ? 'favorited' : ''}" data-action="toggle-favorite" aria-label="Aggiungi ai preferiti"><i class="fas fa-heart"></i></button> </div> ${isSeen ? getSeenDetailsHTML(movieState) : ''}`; grid.appendChild(card); }); categorySection.appendChild(grid); filmContainer.appendChild(categorySection); } }
+    
+    function renderMovies() {
+        if (!filmContainer) return;
+        const searchTerm = searchInput.value.toLowerCase();
+        const selectedCategory = categoryFilter.value;
+        const sortOrder = sortOrderSelect.value;
+        let filteredList = filmList.filter(movie => movie.title.toLowerCase().includes(searchTerm) && (selectedCategory === 'all' || movie.category === selectedCategory));
+        
+        filteredList.sort((a, b) => {
+            const yearA = a.year === 'TBD' ? Infinity : a.year;
+            const yearB = b.year === 'TBD' ? Infinity : b.year;
+            const ratingA = parseFloat(appState.movies[a.id]?.rating) || 0;
+            const ratingB = parseFloat(appState.movies[b.id]?.rating) || 0;
+            switch (sortOrder) {
+                case 'year-desc': return yearB - yearA;
+                case 'year-asc': return yearA - yearB;
+                case 'title-asc': return a.title.localeCompare(b.title);
+                case 'title-desc': return b.title.localeCompare(a.title);
+                case 'rating-desc':
+                    const ratingDiffDesc = ratingB - ratingA;
+                    if (ratingDiffDesc !== 0) return ratingDiffDesc;
+                    return yearB - yearA;
+                case 'rating-asc':
+                    const ratingDiffAsc = ratingA - ratingB;
+                    if (ratingDiffAsc !== 0) return ratingDiffAsc;
+                    return yearA - yearB;
+                default: return a.id - b.id;
+            }
+        });
+
+        currentlyVisibleFilmIds = filteredList.map(m => m.id);
+        filmContainer.innerHTML = '';
+        if (filteredList.length === 0) {
+            filmContainer.innerHTML = `<p class="no-results">Nessun film trovato.</p>`;
+            return;
+        }
+
+        const createMovieCardHTML = (movie, showCategoryTag = false) => {
+            const movieState = appState.movies[movie.id] || {};
+            const isSeen = !!movieState.seen;
+            const isFavorite = !!movieState.favorite;
+            const categoryTag = showCategoryTag ? `<span class="movie-category-tag">${movie.category}</span>` : '';
+            return `<div class="movie-card ${isSeen ? 'is-seen' : ''} ${isFavorite ? 'is-favorite' : ''}" data-id="${movie.id}">
+                ${categoryTag}
+                <div class="card-header">
+                    <label class="custom-checkbox"><input type="checkbox" data-action="toggle-seen" ${isSeen ? 'checked' : ''}><span class="checkmark"></span></label>
+                    <div class="title-year">
+                        <div class="movie-title">${movie.title}</div>
+                        <div class="movie-year">(${movie.year})</div>
+                    </div>
+                    <button class="fav-btn ${isFavorite ? 'favorited' : ''}" data-action="toggle-favorite" aria-label="Aggiungi ai preferiti"><i class="fas fa-heart"></i></button>
+                </div>
+                ${isSeen ? getSeenDetailsHTML(movieState) : ''}
+            </div>`;
+        };
+
+        const isGroupedView = sortOrder === 'default';
+
+        if (isGroupedView) {
+            const groupedMovies = filteredList.reduce((acc, movie) => { (acc[movie.category] = acc[movie.category] || []).push(movie); return acc; }, {});
+            const sortedCategories = Object.keys(groupedMovies).sort((a, b) => groupedMovies[a][0].id - groupedMovies[b][0].id);
+            sortedCategories.forEach(category => {
+                const categorySection = document.createElement('section');
+                categorySection.className = 'film-category';
+                const grid = document.createElement('div');
+                grid.className = 'film-grid';
+                grid.innerHTML = groupedMovies[category].map(movie => createMovieCardHTML(movie, false)).join('');
+                categorySection.innerHTML = `<h2>${category}</h2>`;
+                categorySection.appendChild(grid);
+                filmContainer.appendChild(categorySection);
+            });
+        } else {
+            const sortText = sortOrderSelect.options[sortOrderSelect.selectedIndex].text;
+            const contextTitle = document.createElement('h2');
+            contextTitle.className = 'context-title';
+            contextTitle.textContent = `Film ordinati per ${sortText}`;
+            filmContainer.appendChild(contextTitle);
+
+            const grid = document.createElement('div');
+            grid.className = 'film-grid';
+            grid.innerHTML = filteredList.map(movie => createMovieCardHTML(movie, true)).join('');
+            filmContainer.appendChild(grid);
+        }
+    }
+
     function populateCategoryFilter() { if (!categoryFilter) return; const categories = [...new Set(filmList.map(movie => movie.category))]; categoryFilter.innerHTML = `<option value="all">Tutte le ere Disney</option>`; categories.forEach(category => { const option = document.createElement('option'); option.value = category; option.textContent = category; categoryFilter.appendChild(option); }); }
     function updateStatsDashboard() { const seenCounterEl = document.getElementById('stats-seen-count'); const favCounterEl = document.getElementById('stats-favorite-count'); const completionEl = document.getElementById('stats-completion-percentage'); const totalCanonicalMovies = filmList.filter(f => f.category.includes("Anni")).length; let totalSeenCount = 0, canonicalSeenCount = 0, favoriteCount = 0; for (const id in appState.movies) { const state = appState.movies[id]; if (state.favorite) favoriteCount++; if (state.seen) { totalSeenCount++; const movie = filmList.find(m => m.id == id); if (movie && movie.category.includes("Anni")) canonicalSeenCount++; } } const completionPercentage = totalCanonicalMovies > 0 ? (canonicalSeenCount / totalCanonicalMovies) * 100 : 0; if(seenCounterEl) seenCounterEl.textContent = totalSeenCount; if(favCounterEl) favCounterEl.textContent = favoriteCount; if(completionEl) completionEl.textContent = `${completionPercentage.toFixed(1)}%`; }
-    function handleContainerClick(e) { const card = e.target.closest('.movie-card'); if (!card) return; const movieId = card.dataset.id; const action = e.target.closest('[data-action]')?.dataset.action; appState.movies[movieId] = appState.movies[movieId] || {}; const movieState = appState.movies[movieId]; if (action === 'toggle-seen') { movieState.seen = e.target.checked; if (movieState.seen && !movieState.dateSeen) movieState.dateSeen = new Date().toLocaleDateString('it-IT'); card.classList.toggle('is-seen', movieState.seen); const existingBody = card.querySelector('.card-body'); if(movieState.seen && !existingBody) card.insertAdjacentHTML('beforeend', getSeenDetailsHTML(movieState)); else if (!movieState.seen && existingBody) existingBody.remove(); } else if (action === 'toggle-favorite') { movieState.favorite = !movieState.favorite; card.classList.toggle('is-favorite', movieState.favorite); e.target.closest('.fav-btn').classList.toggle('favorited', movieState.favorite); } else { openModal(movieId); return; } saveState(); updateStatsDashboard(); }
+    function handleContainerClick(e) { const card = e.target.closest('.movie-card'); if (!card) return; const movieId = card.dataset.id; const action = e.target.closest('[data-action]')?.dataset.action; appState.movies[movieId] = appState.movies[movieId] || {}; const movieState = appState.movies[movieId]; if (action === 'toggle-seen') { movieState.seen = e.target.checked; if (movieState.seen && !movieState.dateSeen) movieState.dateSeen = new Date().toLocaleDateString('it-IT'); renderMovies(); } else if (action === 'toggle-favorite') { movieState.favorite = !movieState.favorite; e.target.closest('.fav-btn').classList.toggle('favorited', movieState.favorite); card.classList.toggle('is-favorite', movieState.favorite); } else { openModal(movieId); return; } saveState(); updateStatsDashboard(); }
     function resetAllData() { if (confirm("Sei sicuro di voler cancellare tutti i dati? Questa azione non può essere annullata.")) { appState.movies = {}; saveState(); renderMovies(); updateStatsDashboard(); } }
-    function openModal(movieId) { const movie = filmList.find(m => m.id == movieId); if (!movie || !modal) return; const movieState = appState.movies[movieId] || {}; const modalBody = document.getElementById('modal-body'); modalBody.innerHTML = `<h3>${movie.title} (${movie.year})</h3> <p class="modal-seen-date">Visto il: ${movieState.dateSeen || 'Non ancora visto'}</p> <div class="form-group"><label for="movie-note">Il nostro ricordo speciale:</label><textarea id="movie-note" rows="4" placeholder="Cosa ricordiamo di questo momento?">${movieState.note || ''}</textarea></div> <div class="form-group"><label for="movie-rating">Voto (da 1 a 5):</label><input type="number" id="movie-rating" min="0.5" max="5" step="0.5" value="${movieState.rating || ''}"></div> <button id="save-modal-btn" class="action-btn">Salva Ricordo</button>`; modal.style.display = 'flex'; document.getElementById('save-modal-btn').addEventListener('click', () => { const state = appState.movies[movieId] || {}; state.note = document.getElementById('movie-note').value; state.rating = document.getElementById('movie-rating').value; appState.movies[movieId] = state; saveState(); closeModal(); const cardInDom = document.querySelector(`.movie-card[data-id="${movieId}"]`); if(cardInDom && state.seen) { let cardBody = cardInDom.querySelector('.card-body'); if(cardBody) cardBody.remove(); cardInDom.insertAdjacentHTML('beforeend', getSeenDetailsHTML(state)); } }, { once: true }); }
+    function openModal(movieId) { const movie = filmList.find(m => m.id == movieId); if (!movie || !modal) return; const movieState = appState.movies[movieId] || {}; const modalBody = document.getElementById('modal-body'); modalBody.innerHTML = `<h3>${movie.title} (${movie.year})</h3> <p class="modal-seen-date">Visto il: ${movieState.dateSeen || 'Non ancora visto'}</p> <div class="form-group"><label for="movie-note">Il nostro ricordo speciale:</label><textarea id="movie-note" rows="4" placeholder="Cosa ricordiamo di questo momento?">${movieState.note || ''}</textarea></div> <div class="form-group"><label for="movie-rating">Voto (da 1 a 5):</label><input type="number" id="movie-rating" min="0.5" max="5" step="0.5" value="${movieState.rating || ''}"></div> <button id="save-modal-btn" class="action-btn">Salva Ricordo</button>`; modal.style.display = 'flex'; document.getElementById('save-modal-btn').addEventListener('click', () => { const state = appState.movies[movieId] || {}; state.note = document.getElementById('movie-note').value; state.rating = document.getElementById('movie-rating').value; appState.movies[movieId] = state; saveState(); closeModal(); renderMovies(); updateStatsDashboard(); }, { once: true }); }
     function closeModal() { if (modal) modal.style.display = 'none'; }
     function toggleTheme() { appState.theme = appState.theme === 'dark' ? 'light' : 'dark'; document.body.className = `${appState.theme}-mode`; updateThemeIcon(); saveState(); }
     function updateThemeIcon() { if (themeToggleBtn) { const icon = themeToggleBtn.querySelector('i'); if (icon) icon.className = appState.theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon'; } }
     function handleScroll() { if (!scrollToTopBtn) return; if (window.scrollY > 300) { scrollToTopBtn.style.display = 'flex'; scrollToTopBtn.style.opacity = '1'; } else { scrollToTopBtn.style.opacity = '0'; setTimeout(() => { if (window.scrollY <= 300) scrollToTopBtn.style.display = 'none'; }, 300); } }
-    async function exportSeenMovies() {
-        const seenMovies = filmList.filter(film => appState.movies[film.id]?.seen);
-        if (seenMovies.length === 0) { alert("Nessun film è stato ancora segnato come visto!"); return; }
-        const printWindow = window.open('', '_blank');
-        if (!printWindow) { alert("Per favore, abilita i popup per questo sito per poter esportare i dati."); return; }
-        printWindow.document.write('<html><head><title>Generazione Riepilogo...</title><style>body{font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background: #0d1b2a; color: white; text-align: center; padding: 1rem;} div{max-width: 90%;}</style></head><body><div><h1>Sto preparando il tuo riepilogo magico...</h1><p style="font-size: 0.9rem; color: #a8b2d1;">Una volta apparsa l\'anteprima, per salvare come PDF su iPhone, tocca l\'icona di Condivisione e scegli "Salva su File".</p></div></body></html>');
-        let pdfStyles = '';
-        try { const response = await fetch('pdf-styles.css'); if (!response.ok) throw new Error(`Errore HTTP: ${response.status}`); pdfStyles = await response.text(); } catch (error) { console.error("Impossibile caricare pdf-styles.css:", error); printWindow.document.body.innerHTML = '<h1>Errore nella generazione del PDF. Chiudi questa finestra e riprova.</h1>'; return; }
-        const today = new Date(); const formattedDate = `${today.getDate().toString().padStart(2, '0')}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getFullYear()}`;
-        const favorites = seenMovies.filter(movie => appState.movies[movie.id]?.favorite); const others = seenMovies.filter(movie => !appState.movies[movie.id]?.favorite);
-        const createCardHTML = (movie) => { const state = appState.movies[movie.id]; return `<div class="pdf-movie-card ${state.favorite ? 'is-favorite-pdf' : ''}"><h3 class="pdf-movie-title">${movie.title} <span class="pdf-movie-year">(${movie.year})</span></h3><div class="pdf-info-grid"><div class="pdf-info-item"><span class="pdf-info-label">Data Visione</span><span class="pdf-info-value">${state.dateSeen || 'N/D'}</span></div><div class="pdf-info-item"><span class="pdf-info-label">Valutazione</span><span class="pdf-info-value pdf-rating-stars">${generateRatingStars(state.rating)}</span></div></div>${state.note ? `<div class="pdf-notes"><span class="pdf-info-label">Il nostro ricordo:</span><p>${state.note}</p></div>` : ''}</div>`; };
-        const logoUrl = 'images/logo_bianco.png'; const logoHTML = `<img src="${logoUrl}" class="pdf-logo" alt="Logo">`;
-        const favoritesHTML = favorites.length > 0 ? `<div class="pdf-section"><h2 class="pdf-section-title"><i class="fas fa-star"></i> I Nostri Momenti Preferiti</h2><div class="pdf-card-grid">${favorites.map(createCardHTML).join('')}</div></div>` : ''; const othersHTML = others.length > 0 ? `<div class="pdf-section"><h2 class="pdf-section-title"><i class="fas fa-film"></i> Il Diario del Nostro Viaggio</h2><div class="pdf-card-grid">${others.map(createCardHTML).join('')}</div></div>` : '';
-        const magicDustHTML = `<div class="magic-dust"><i class="fas fa-star"></i><i class="fas fa-heart"></i><i class="fas fa-magic-wand-sparkles"></i><i class="fas fa-star"></i><i class="fas fa-music"></i><i class="fas fa-heart"></i><i class="fas fa-magic-wand-sparkles"></i><i class="fas fa-star"></i><i class="fas fa-heart"></i><i class="fas fa-music"></i><i class="fas fa-star"></i><i class="fas fa-magic-wand-sparkles"></i></div>`;
-        const contentHTML = `<div class="pdf-cover-page"><div class="pdf-cover-content">${logoHTML}<h1 class="logo-text">Momento Film</h1><p class="tagline">Il riepilogo della nostra avventura Disney</p></div>${magicDustHTML}</div>${favoritesHTML ? `<div class="pdf-page-break"></div>${favoritesHTML}` : ''}${othersHTML ? `<div class="pdf-page-break"></div>${othersHTML}` : ''}`;
-        printWindow.document.open();
-        printWindow.document.write(`<!DOCTYPE html><html lang="it"><head><meta charset="UTF-8"><title>Momento Film - Riepilogo ${formattedDate}</title><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@400;700&display=swap" rel="stylesheet"><style>${pdfStyles}</style></head><body>${contentHTML}<div class="pdf-footer">Un viaggio magico, un ricordo alla volta.</div><script>window.onload = function() { setTimeout(() => { window.print(); window.close(); }, 1000); }<\/script></body></html>`);
-        printWindow.document.close();
-    }
+    async function exportSeenMovies() { const seenMovies = filmList.filter(film => appState.movies[film.id]?.seen); if (seenMovies.length === 0) { alert("Nessun film è stato ancora segnato come visto!"); return; } const printWindow = window.open('', '_blank'); if (!printWindow) { alert("Per favore, abilita i popup per questo sito per poter esportare i dati."); return; } printWindow.document.write('<html><head><title>Generazione Riepilogo...</title><style>body{font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background: #0d1b2a; color: white; text-align: center; padding: 1rem;} div{max-width: 90%;}</style></head><body><div><h1>Sto preparando il tuo riepilogo magico...</h1><p style="font-size: 0.9rem; color: #a8b2d1;">Una volta apparsa l\'anteprima, per salvare come PDF su iPhone, tocca l\'icona di Condivisione e scegli "Salva su File".</p></div></body></html>'); let pdfStyles = ''; try { const response = await fetch('pdf-styles.css'); if (!response.ok) throw new Error(`Errore HTTP: ${response.status}`); pdfStyles = await response.text(); } catch (error) { console.error("Impossibile caricare pdf-styles.css:", error); printWindow.document.body.innerHTML = '<h1>Errore nella generazione del PDF. Chiudi questa finestra e riprova.</h1>'; return; } const today = new Date(); const formattedDate = `${today.getDate().toString().padStart(2, '0')}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getFullYear()}`; const favorites = seenMovies.filter(movie => appState.movies[movie.id]?.favorite); const others = seenMovies.filter(movie => !appState.movies[movie.id]?.favorite); const createCardHTML = (movie) => { const state = appState.movies[movie.id]; return `<div class="pdf-movie-card ${state.favorite ? 'is-favorite-pdf' : ''}"><h3 class="pdf-movie-title">${movie.title} <span class="pdf-movie-year">(${movie.year})</span></h3><div class="pdf-info-grid"><div class="pdf-info-item"><span class="pdf-info-label">Data Visione</span><span class="pdf-info-value">${state.dateSeen || 'N/D'}</span></div><div class="pdf-info-item"><span class="pdf-info-label">Valutazione</span><span class="pdf-info-value pdf-rating-stars">${generateRatingStars(state.rating)}</span></div></div>${state.note ? `<div class="pdf-notes"><span class="pdf-info-label">Il nostro ricordo:</span><p>${state.note}</p></div>` : ''}</div>`; }; const logoUrl = 'images/logo_bianco.png'; const logoHTML = `<img src="${logoUrl}" class="pdf-logo" alt="Logo">`; const favoritesHTML = favorites.length > 0 ? `<div class="pdf-section"><h2 class="pdf-section-title"><i class="fas fa-star"></i> I Nostri Momenti Preferiti</h2><div class="pdf-card-grid">${favorites.map(createCardHTML).join('')}</div></div>` : ''; const othersHTML = others.length > 0 ? `<div class="pdf-section"><h2 class="pdf-section-title"><i class="fas fa-film"></i> Il Diario del Nostro Viaggio</h2><div class="pdf-card-grid">${others.map(createCardHTML).join('')}</div></div>` : ''; const magicDustHTML = `<div class="magic-dust"><i class="fas fa-star"></i><i class="fas fa-heart"></i><i class="fas fa-magic-wand-sparkles"></i><i class="fas fa-star"></i><i class="fas fa-music"></i><i class="fas fa-heart"></i><i class="fas fa-magic-wand-sparkles"></i><i class="fas fa-star"></i><i class="fas fa-heart"></i><i class="fas fa-music"></i><i class="fas fa-star"></i><i class="fas fa-magic-wand-sparkles"></i></div>`; const contentHTML = `<div class="pdf-cover-page"><div class="pdf-cover-content">${logoHTML}<h1 class="logo-text">Momento Film</h1><p class="tagline">Il riepilogo della nostra avventura Disney</p></div>${magicDustHTML}</div>${favoritesHTML ? `<div class="pdf-page-break"></div>${favoritesHTML}` : ''}${othersHTML ? `<div class="pdf-page-break"></div>${othersHTML}` : ''}`; printWindow.document.open(); printWindow.document.write(`<!DOCTYPE html><html lang="it"><head><meta charset="UTF-8"><title>Momento Film - Riepilogo ${formattedDate}</title><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@400;700&display=swap" rel="stylesheet"><style>${pdfStyles}</style></head><body>${contentHTML}<div class="pdf-footer">Un viaggio magico, un ricordo alla volta.</div><script>window.onload = function() { setTimeout(() => { window.print(); window.close(); }, 1000); }<\/script></body></html>`); printWindow.document.close(); }
     function pickRandomMovie() { const unseenMovies = filmList.filter(film => !appState.movies[film.id]?.seen && typeof film.year === 'number' && film.year <= new Date().getFullYear()); if (unseenMovies.length === 0) { randomPickModalBody.innerHTML = `<h2>Congratulazioni!</h2><p class="picked-movie-title" style="font-size: 1.5rem; animation: none; text-shadow: none; color: var(--dark-primary-text);">Hai già visto tutti i film disponibili!</p><p>È tempo di attendere le prossime uscite Disney!</p>`; } else { const pickedMovie = unseenMovies[Math.floor(Math.random() * unseenMovies.length)]; randomPickModalBody.innerHTML = `<h2>Il Prossimo Momento Magico è...</h2><div class="picked-movie-title">${pickedMovie.title}</div><p class="picked-movie-year">(${pickedMovie.year})</p>`; } randomPickModal.style.display = 'flex'; }
     function setupStickyToolbar() { const toolbar = document.querySelector('.filter-toolbar'); if (!toolbar) return; const observer = new IntersectionObserver(([e]) => e.target.classList.toggle('is-stuck', e.intersectionRatio < 1), { threshold: [1] }); observer.observe(toolbar); }
+    
     filmContainer.addEventListener('click', handleContainerClick);
     themeToggleBtn.addEventListener('click', toggleTheme);
     window.addEventListener('scroll', handleScroll);
@@ -60,9 +129,18 @@ document.addEventListener('DOMContentLoaded', () => {
     exportBtn.addEventListener('click', exportSeenMovies);
     searchInput.addEventListener('input', () => { clearTimeout(window.searchTimeout); window.searchTimeout = setTimeout(renderMovies, 300); });
     categoryFilter.addEventListener('change', renderMovies);
+    sortOrderSelect.addEventListener('change', () => {
+        const value = sortOrderSelect.value;
+        if (value.includes('year')) { sortIcon.className = 'fas fa-calendar-alt'; } 
+        else if (value.includes('title')) { sortIcon.className = 'fas fa-sort-alpha-down'; }
+        else if (value.includes('rating')) { sortIcon.className = 'fas fa-star'; }
+        else { sortIcon.className = 'fas fa-clock'; }
+        renderMovies();
+    });
     resetAllBtn.addEventListener('click', resetAllData);
     randomPickBtn.addEventListener('click', pickRandomMovie);
     randomPickModalCloseBtn.addEventListener('click', () => { randomPickModal.style.display = 'none'; });
+    
     loadState();
     populateCategoryFilter();
     renderMovies();

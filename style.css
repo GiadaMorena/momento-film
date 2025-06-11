@@ -29,7 +29,7 @@ body.light-mode .filter-toolbar { background: var(--light-card); }
 body.light-mode .filter-toolbar.is-stuck { background-color: rgba(255, 255, 255, 0.95); backdrop-filter: blur(5px); }
 .input-wrapper { display: flex; align-items: center; position: relative; flex-grow: 1; flex-shrink: 1; min-width: 150px; background-color: var(--dark-bg); border-radius: 20px; border: 2px solid var(--accent-color); }
 body.light-mode .input-wrapper { background-color: var(--light-bg); }
-.input-wrapper i { padding-left: 15px; color: var(--dark-secondary-text); }
+.input-wrapper i { padding-left: 15px; color: var(--dark-secondary-text); transition: color 0.3s ease; }
 .filter-toolbar input, .filter-toolbar select { width: 100%; padding: 12px 15px 12px 10px; border: none; background-color: transparent; color: var(--dark-primary-text); font-size: 1rem; -webkit-appearance: none; appearance: none; }
 .toolbar-btn { padding: 12px 15px; border: none; border-radius: 20px; cursor: pointer; font-size: 0.9rem; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s ease; flex-shrink: 0; white-space: nowrap; }
 .toolbar-btn:disabled { cursor: not-allowed; opacity: 0.7; }
@@ -51,6 +51,10 @@ body.light-mode .movie-card { background: var(--light-card); border-color: #dee2
 .movie-card:active { transform: translateY(-2px) scale(0.99); }
 .movie-card::after { content: ''; position: absolute; top: -2px; left: -2px; width: calc(100% + 4px); height: calc(100% + 4px); border-radius: 14px; background: linear-gradient(45deg, var(--royal-gold), var(--accent-color)); z-index: -1; filter: blur(5px); opacity: 0; transition: opacity 0.4s ease; }
 .movie-card.is-favorite::after { opacity: 0.7; }
+/* == ✨ Badge della Categoria sulla Card ✨ == */
+.movie-category-tag { position: absolute; top: -10px; right: 15px; background-color: var(--magic-purple); color: white; padding: 4px 10px; border-radius: 15px; font-size: 0.75rem; font-weight: 600; box-shadow: 0 2px 5px rgba(0,0,0,0.3); z-index: 5; }
+.context-title { font-family: 'Cinzel', serif; text-align: center; margin-bottom: 2rem; color: var(--dark-secondary-text); border-bottom: 2px solid var(--dark-card-stuck); padding-bottom: 1rem; }
+body.light-mode .context-title { border-bottom-color: #e9ecef; }
 .card-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.8rem; }
 .custom-checkbox { position: relative; cursor: pointer; flex-shrink: 0; }
 .custom-checkbox input { display: none; }
@@ -103,4 +107,5 @@ header::after, .film-category h2::after { content: ''; position: absolute; left:
 header::after { height: 4px; }
 .film-category h2::after { height: 3px; }
 @media (max-width: 920px) { .filter-toolbar { flex-wrap: wrap; } .stats-dashboard { grid-template-columns: 1fr; gap: 1rem; padding: 1rem; margin: 1.5rem auto; max-width: 95%; } }
-@media (max-width: 600px) { header { padding: 3rem 1rem; } #film-container { padding: 0 1rem; } .film-grid { grid-template-columns: 1fr; gap: 1rem; } .filter-toolbar { flex-direction: column; align-items: stretch; padding: 1rem; position: static; max-width: 95%; } .toolbar-btn { font-size: 0.9rem; padding: 12px 15px; width: 100%; box-sizing: border-box; } .modal-content { padding: 1.5rem 1rem; width: 100%; } .movie-card:hover, .fav-btn:hover { transform: none; } .theme-toggle-btn { top: 15px; right: 15px; width: 40px; height: 40px; } #scroll-to-top { width: 40px; height: 40px; font-size: 1.1rem; bottom: 15px; right: 15px; } }
+@media (max-width: 768px) { .filter-toolbar { flex-direction: column; align-items: stretch; gap: 0.5rem; } .toolbar-btn { width: 100%; box-sizing: border-box; } }
+@media (max-width: 600px) { header { padding: 3rem 1rem; } #film-container { padding: 0 1rem; } .film-grid { grid-template-columns: 1fr; gap: 1rem; } .modal-content { padding: 1.5rem 1rem; width: 100%; } .movie-card:hover, .fav-btn:hover { transform: none; } .theme-toggle-btn { top: 15px; right: 15px; width: 40px; height: 40px; } #scroll-to-top { width: 40px; height: 40px; font-size: 1.1rem; bottom: 15px; right: 15px; } }

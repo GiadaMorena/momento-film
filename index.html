@@ -22,7 +22,18 @@
         <section class="filter-toolbar">
             <div class="input-wrapper"><i class="fas fa-search"></i><input type="text" id="search-input" placeholder="Cerca il tuo prossimo film..."></div>
             <div class="input-wrapper"><i class="fas fa-filter"></i><select id="category-filter"></select></div>
-            <!-- Pulsante "Segna Visti" RIMOSSO -->
+            <div class="input-wrapper">
+                <i id="sort-icon" class="fas fa-clock"></i>
+                <select id="sort-order">
+                    <option value="default">Ordine Cronologico</option>
+                    <option value="year-desc">Anno (più recente)</option>
+                    <option value="year-asc">Anno (meno recente)</option>
+                    <option value="title-asc">Titolo (A-Z)</option>
+                    <option value="title-desc">Titolo (Z-A)</option>
+                    <option value="rating-desc">Voto (Migliori)</option>
+                    <option value="rating-asc">Voto (Peggiori)</option>
+                </select>
+            </div>
             <button id="reset-all-btn" class="toolbar-btn secondary"><i class="fas fa-sync-alt"></i> Nuovo Inizio</button>
             <button id="export-btn" class="toolbar-btn"><i class="fas fa-download"></i> Esporta Dati</button>
             <button id="random-pick-btn" class="toolbar-btn"><i class="fas fa-wand-magic-sparkles"></i> Momento Magico</button>
