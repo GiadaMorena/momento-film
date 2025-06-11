@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <!-- ... (head non cambia) ... -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="La nostra avventura condivisa attraverso i film d'animazione Disney.">
@@ -15,14 +14,12 @@
 <body class="dark-mode">
     <header>
         <div class="header-content"><h1>Momento Film</h1><p>La nostra avventura Disney, film dopo film.</p></div>
-        <!-- Contenitore per i pulsanti dell'header -->
         <div class="header-buttons">
             <button id="achievements-btn" class="theme-toggle-btn" aria-label="Mostra Medaglie"><i class="fas fa-trophy"></i></button>
             <button id="theme-toggle" class="theme-toggle-btn" aria-label="Cambia tema"><i class="fas fa-sun"></i></button>
         </div>
     </header>
     <main>
-        <!-- ... (il resto del main non cambia) ... -->
         <section class="stats-dashboard">
             <div class="stat-card"><span id="stats-seen-count" class="stat-number">0</span><div class="stat-label">🎬 Momenti vissuti</div></div>
             <div class="stat-card"><span id="stats-favorite-count" class="stat-number">0</span><div class="stat-label">⭐ Top momenti</div></div>
@@ -30,7 +27,6 @@
         </section>
         <section class="filter-toolbar">
             <div class="input-wrapper"><i class="fas fa-search"></i><input type="text" id="search-input" placeholder="Cerca il tuo prossimo film..."></div>
-            <div class="input-wrapper"><i class="fas fa-filter"></i><select id="category-filter"></select></div>
             <div class="input-wrapper">
                 <i id="sort-icon" class="fas fa-clock"></i>
                 <select id="sort-order">
@@ -50,25 +46,10 @@
         <div id="film-container"></div>
     </main>
     <a href="#" id="scroll-to-top" class="scroll-to-top-btn" aria-label="Torna in cima"><i class="fas fa-arrow-up"></i></a>
-    
-    <!-- Modali esistenti -->
     <div id="movie-modal" class="modal"><div class="modal-content"><span class="close-btn" aria-label="Chiudi modale">×</span><div id="modal-body"></div></div></div>
     <div id="random-pick-modal" class="modal"><div class="modal-content random-pick-content"><span class="close-btn" aria-label="Chiudi modale">×</span><div id="random-pick-body"></div></div></div>
-    
-    <!-- NUOVO MODALE PER LE MEDAGLIE -->
-    <div id="achievements-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" aria-label="Chiudi modale">×</span>
-            <h3>Bacheca delle Medaglie</h3>
-            <div id="achievements-grid" class="achievements-grid">
-                <!-- Le medaglie verranno inserite qui dal JS -->
-            </div>
-        </div>
-    </div>
-
-    <!-- NUOVO CONTENITORE PER LE NOTIFICHE TOAST -->
+    <div id="achievements-modal" class="modal"><div class="modal-content"><span class="close-btn" aria-label="Chiudi modale">×</span><h3>Bacheca delle Medaglie</h3><div id="achievements-grid" class="achievements-grid"></div></div></div>
     <div id="toast-container"></div>
-
     <script src="script.js" defer></script>
 </body>
 </html>
