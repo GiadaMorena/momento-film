@@ -1,77 +1,38 @@
 /* ========================================================== */
-/* ==      PDF "ENCHANTED EDITION" V2 - Corretto         == */
+/* ==      PDF "ENCHANTED EDITION" V3 - Mobile First       == */
 /* ========================================================== */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Lato', sans-serif; background-color: #f8f9fa; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+.pdf-cover-page { height: 297mm; display: flex; flex-direction: column; justify-content: center; align-items: center; background: #0d1b2a; color: #ffffff; text-align: center; position: relative; overflow: hidden; }
+.pdf-cover-content { z-index: 10; }
+.pdf-logo { width: 100px; height: 100px; margin-bottom: 20px; filter: brightness(0) invert(1); }
+.logo-text { font-family: 'Cinzel', serif; font-size: 42pt; text-shadow: 0 0 15px rgba(255, 193, 7, 0.5); }
+.tagline { font-size: 11pt; color: #a8b2d1; margin-top: 10px; text-transform: uppercase; letter-spacing: 2px; }
+.pdf-section { padding: 18mm 15mm; }
+.pdf-section-title { font-family: 'Cinzel', serif; font-size: 20pt; color: #1b263b; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid; border-image: linear-gradient(to right, #9d4edd, #ffc107) 1; display: flex; align-items: center; }
+.pdf-section-title .fa-star, .pdf-section-title .fa-film { color: #9d4edd; margin-right: 12px; font-size: 18pt; }
+.pdf-card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8mm; }
+.pdf-movie-card { background: #ffffff; border: 1px solid #e9ecef; border-radius: 6px; padding: 12px; box-shadow: 0 4px 15px rgba(42, 58, 80, 0.08); }
+.is-favorite-pdf { border-top: 4px solid #fca311; background: #fffcf2; }
+.pdf-movie-title { font-family: 'Cinzel', serif; font-size: 14pt; color: #1b263b; margin-bottom: 8px; }
+.pdf-movie-year { font-weight: 400; color: #6c757d; font-size: 11pt; }
+.pdf-info-grid { display: grid; grid-template-columns: 1fr; gap: 8px; margin: 12px 0; padding-top: 12px; border-top: 1px solid #f1f3f5; }
+.pdf-info-item { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; }
+.pdf-info-label { font-size: 9pt; font-weight: 700; color: #6c757d; text-transform: uppercase; }
+.pdf-info-value { font-size: 10pt; color: #212529; text-align: right; }
+.pdf-rating-stars { color: #ffc107; font-size: 11pt; }
+.pdf-rating-stars .far.fa-star { color: #ced4da; }
+.pdf-notes { margin-top: 12px; }
+.pdf-notes .pdf-info-label { display: block; font-size: 8pt; color: #9d4edd; margin-bottom: 4px; }
+.pdf-notes p { padding: 10px; margin: 0; font-size: 9.5pt; font-style: italic; color: #495057; background: #f8f9fa; border-left: 3px solid #ced4da; border-radius: 4px;}
+.pdf-footer { text-align: center; font-size: 8pt; color: #adb5bd; padding-top: 5mm; border-top: 1px solid #e9ecef; }
+.pdf-cover-page .pdf-footer { color: rgba(255, 255, 255, 0.5); border-top: 1px solid rgba(255, 255, 255, 0.1); }
 @media print {
-    @page {
-        size: A4 portrait;
-        margin: 0;
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Lato', sans-serif; background-color: #f8f9fa; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-    
-    /* Logica di salto pagina corretta */
+    @page { size: A4 portrait; margin: 0; }
     .pdf-page-break { page-break-before: always; }
-    
-    /* ---- PAGINA DI COPERTINA ---- */
-    .pdf-cover-page {
-        height: 297mm; display: flex; flex-direction: column; justify-content: center;
-        align-items: center; background: #0d1b2a; color: #ffffff;
-        text-align: center; position: relative; overflow: hidden;
-    }
-    .pdf-cover-content { z-index: 10; }
-    
-    .pdf-logo {
-        width: 100px; height: 100px; margin-bottom: 20px;
-        /* Questo filtro rende l'immagine bianca mantenendo la trasparenza. */
-        filter: brightness(0) invert(1);
-    }
-
-    .logo-text { font-family: 'Cinzel', serif; font-size: 42pt; text-shadow: 0 0 15px rgba(255, 193, 7, 0.5); }
-    .tagline { font-size: 11pt; color: #a8b2d1; margin-top: 10px; text-transform: uppercase; letter-spacing: 2px; }
-    
-    /* ---- DECORAZIONI ANIMATE "POLVERE DI FATA" ---- */
-    @keyframes rise {
-        from { transform: translateY(0); opacity: 0; }
-        to { transform: translateY(-105vh) rotate(360deg); opacity: 1; }
-    }
+    .pdf-movie-card { break-inside: avoid; }
+    .pdf-footer { position: fixed; bottom: 8mm; left: 15mm; right: 15mm; }
+    @keyframes rise { from { transform: translateY(0); opacity: 0; } to { transform: translateY(-105vh) rotate(360deg); opacity: 1; } }
     .magic-dust { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; overflow: hidden; }
-    .magic-dust i {
-        position: absolute; bottom: -50px; color: rgba(255, 255, 255, 0.1); font-size: 20px;
-        animation: rise 20s infinite linear;
-        animation-direction: alternate;
-    }
-    .magic-dust i:nth-child(1) { left: 10%; animation-duration: 25s; }
-    .magic-dust i:nth-child(2) { left: 20%; animation-duration: 15s; animation-delay: 2s; font-size: 14px; }
-    .magic-dust i:nth-child(3) { left: 25%; animation-duration: 22s; animation-delay: 5s; }
-    .magic-dust i:nth-child(4) { left: 40%; animation-duration: 18s; animation-delay: 1s; font-size: 22px; }
-    .magic-dust i:nth-child(5) { left: 55%; animation-duration: 28s; animation-delay: 7s; }
-    .magic-dust i:nth-child(6) { left: 65%; animation-duration: 16s; animation-delay: 3s; font-size: 12px; }
-    .magic-dust i:nth-child(7) { left: 75%; animation-duration: 19s; animation-delay: 6s; }
-    .magic-dust i:nth-child(8) { left: 90%; animation-duration: 24s; animation-delay: 4s; font-size: 18px; }
-    .magic-dust i:nth-child(9) { left: 50%; animation-duration: 17s; animation-delay: 8s; }
-    .magic-dust i:nth-child(10) { left: 80%; animation-duration: 21s; animation-delay: 9s; }
-    .magic-dust i:nth-child(11) { left: 5%;  animation-duration: 26s; animation-delay: 1s; font-size: 16px; }
-    .magic-dust i:nth-child(12) { left: 33%; animation-duration: 23s; animation-delay: 10s; }
-    
-    /* ---- Contenuti delle pagine successive ---- */
-    .pdf-section { padding: 18mm 15mm; }
-    .pdf-section-title { font-family: 'Cinzel', serif; font-size: 20pt; color: #1b263b; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid; border-image: linear-gradient(to right, #9d4edd, #ffc107) 1; display: flex; align-items: center; }
-    .pdf-section-title .fa-star, .pdf-section-title .fa-film { color: #9d4edd; margin-right: 12px; font-size: 18pt; }
-    .pdf-card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8mm; }
-    .pdf-movie-card { background: #ffffff; border: 1px solid #e9ecef; border-radius: 6px; padding: 12px; break-inside: avoid; box-shadow: 0 4px 15px rgba(42, 58, 80, 0.08); }
-    .is-favorite-pdf { border-top: 4px solid var(--royal-gold); background: #fffcf2; }
-    .pdf-movie-title { font-family: 'Cinzel', serif; font-size: 14pt; color: #1b263b; margin-bottom: 8px; }
-    .pdf-movie-year { font-weight: 400; color: #6c757d; font-size: 11pt; }
-    .pdf-info-grid { display: grid; grid-template-columns: 1fr; gap: 8px; margin: 12px 0; padding-top: 12px; border-top: 1px solid #f1f3f5; }
-    .pdf-info-item { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; }
-    .pdf-info-label { font-size: 9pt; font-weight: 700; color: #6c757d; text-transform: uppercase; }
-    .pdf-info-value { font-size: 10pt; color: #212529; text-align: right; }
-    .pdf-rating-stars { color: #ffc107; font-size: 11pt; }
-    .pdf-rating-stars .far.fa-star { color: #ced4da; }
-    .pdf-notes { margin-top: 12px; }
-    .pdf-notes .pdf-info-label { display: block; font-size: 8pt; color: #9d4edd; margin-bottom: 4px; }
-    .pdf-notes p { padding: 10px; margin: 0; font-size: 9.5pt; font-style: italic; color: #495057; background: #f8f9fa; border-left: 3px solid #ced4da; border-radius: 4px;}
-    .pdf-footer { text-align: center; font-size: 8pt; color: #adb5bd; padding-top: 5mm; position: fixed; bottom: 8mm; left: 15mm; right: 15mm; border-top: 1px solid #e9ecef; }
-    .pdf-cover-page .pdf-footer { color: rgba(255, 255, 255, 0.5); border-top: 1px solid rgba(255, 255, 255, 0.1); }
+    .magic-dust i { position: absolute; bottom: -50px; color: rgba(255, 255, 255, 0.1); font-size: 20px; animation: rise 20s infinite linear; animation-direction: alternate; }
 }
