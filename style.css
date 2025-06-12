@@ -1,3 +1,6 @@
+/* =================================================================== */
+/* ==   🎨 IMPOSTAZIONI GLOBALI E PALETTE COLORI COMPLETA   == */
+/* =================================================================== */
 :root {
     --dark-bg: #0d1b2a; --dark-card: #1b263b; --dark-primary-text: #e0e1dd; --dark-secondary-text: #a8b2d1;
     --dark-card-stuck: #2a3a50;
@@ -137,12 +140,15 @@ body.light-mode .toast { background-color: var(--light-card); color: var(--light
 @keyframes toastIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 @keyframes toastOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(120%); opacity: 0; } }
 
-/* =================================================================== */
-/* ==      📱 OTTIMIZZAZIONE RESPONSIVE (STABILE)     == */
-/* =================================================================== */
-@media (max-width: 992px) {
-    .filter-toolbar { flex-wrap: wrap; }
-}
+/* Stili per i Voti di Coppia nel Modale */
+.couple-rating-container { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
+.rating-group { flex: 1; text-align: center; }
+.rating-group label { display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+.affinity-meter { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+.affinity-meter label { font-size: 0.8rem; color: var(--dark-secondary-text); margin-bottom: 0.5rem; font-weight: bold; }
+#affinity-score { font-family: 'Cinzel', serif; font-size: 2rem; font-weight: 700; color: var(--accent-hover); transition: color 0.4s ease; }
+
+@media (max-width: 992px) { .filter-toolbar { flex-wrap: wrap; } }
 @media (max-width: 768px) {
     .stats-dashboard { grid-template-columns: 1fr; gap: 1.5rem; }
     .filter-toolbar { flex-direction: column; align-items: stretch; position: static; gap: 0.75rem; }
