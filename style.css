@@ -28,9 +28,11 @@ body.light-mode .stats-dashboard { background-color: var(--light-card); }
 #stats-completion-percentage { color: var(--magic-purple); }
 .stat-label { font-size: 0.9rem; color: var(--dark-secondary-text); margin-top: 0.5rem; }
 body.light-mode .stat-label { color: var(--light-secondary-text); }
-.filter-toolbar { display: flex; align-items: center; gap: 1rem; max-width: 1400px; margin: -1rem auto 2rem auto; padding: 1rem; background: var(--dark-card); border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); border-top: 1px solid var(--dark-card-stuck); flex-wrap: nowrap; position: sticky; top: 0; z-index: 1000; transition: background-color 0.3s ease, box-shadow 0.3s ease, padding 0.3s ease, border-radius 0.3s ease; }
-.filter-toolbar.is-stuck { background-color: var(--dark-card-stuck); box-shadow: 0 5px 20px rgba(0,0,0,0.3); padding: 0.8rem 1rem; border-radius: 0 0 12px 12px; }
-body.light-mode .filter-toolbar { background: var(--light-card); border-top-color: #f1f3f5; }
+
+/* --- Sezione Toolbar Ripristinata --- */
+.filter-toolbar { display: flex; align-items: center; gap: 0.8rem; max-width: 1400px; margin: -1rem auto 2rem auto; padding: 1rem; background: var(--dark-card); border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); flex-wrap: nowrap; position: sticky; top: 0; z-index: 1000; transition: background-color 0.3s ease, box-shadow 0.3s ease, padding 0.3s ease, border-radius 0.3s ease; }
+.filter-toolbar.is-stuck { background-color: var(--dark-card-stuck); box-shadow: 0 5px 20px rgba(0,0,0,0.3); padding: 0.8rem 1rem; border-radius: 0 0 10px 10px; }
+body.light-mode .filter-toolbar { background: var(--light-card); }
 body.light-mode .filter-toolbar.is-stuck { background-color: rgba(255, 255, 255, 0.95); backdrop-filter: blur(5px); }
 .input-wrapper { display: flex; align-items: center; position: relative; flex-grow: 1; flex-shrink: 1; min-width: 150px; background-color: var(--dark-bg); border-radius: 20px; border: 2px solid var(--accent-color); }
 body.light-mode .input-wrapper { background-color: var(--light-bg); }
@@ -39,6 +41,8 @@ body.light-mode .input-wrapper i { color: var(--light-secondary-text); }
 .input-wrapper:focus-within i { color: var(--accent-color); }
 .filter-toolbar input, .filter-toolbar select { width: 100%; padding: 12px 15px 12px 10px; border: none; background-color: transparent; color: var(--dark-primary-text); font-size: 1rem; -webkit-appearance: none; appearance: none; }
 body.light-mode .filter-toolbar input, body.light-mode .filter-toolbar select { color: var(--light-primary-text); }
+/* --- Fine Sezione Toolbar Ripristinata --- */
+
 .toolbar-btn { padding: 12px 20px; border: none; border-radius: 25px; cursor: pointer; font-size: 0.9rem; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; transition: transform 0.2s ease, box-shadow 0.2s ease; flex-shrink: 0; white-space: nowrap; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
 .toolbar-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.3); }
 .toolbar-btn:active { transform: translateY(0) scale(0.98); box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
@@ -139,7 +143,7 @@ body.light-mode .toast { background-color: var(--light-card); color: var(--light
 @keyframes toastOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(120%); opacity: 0; } }
 
 /* =================================================================== */
-/* ==   📱 OTTIMIZZAZIONE RESPONSIVE V2 - A PROVA DI IPHONE      == */
+/* ==      📱 OTTIMIZZAZIONE RESPONSIVE V2 - A PROVA DI IPHONE      == */
 /* =================================================================== */
 @media (max-width: 992px) {
     .filter-toolbar { flex-wrap: wrap; }
