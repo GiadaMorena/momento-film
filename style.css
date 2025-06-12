@@ -139,60 +139,27 @@ body.light-mode .toast { background-color: var(--light-card); color: var(--light
 @keyframes toastOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(120%); opacity: 0; } }
 
 /* =================================================================== */
-/* ==      📱 OTTIMIZZAZIONE RESPONSIVE PER DISPOSITIVI MOBILI     == */
+/* ==   📱 OTTIMIZZAZIONE RESPONSIVE V2 - A PROVA DI IPHONE      == */
 /* =================================================================== */
 @media (max-width: 992px) {
-    .filter-toolbar {
-        flex-wrap: wrap;
-        gap: 0.8rem;
-    }
+    .filter-toolbar { flex-wrap: wrap; }
+    .filter-toolbar .input-wrapper { flex-basis: 250px; }
 }
 @media (max-width: 768px) {
-    .stats-dashboard {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-        padding: 1.5rem;
-    }
-    .filter-toolbar {
-        flex-direction: column;
-        align-items: stretch;
-        position: static;
-        border-radius: 12px;
-    }
-    .film-grid {
-        grid-template-columns: 1fr;
-    }
-    .film-category {
-        padding: 1.5rem;
-    }
+    .stats-dashboard { grid-template-columns: 1fr; gap: 1.5rem; padding: 1.5rem; }
+    .filter-toolbar { flex-direction: column; align-items: stretch; position: static; border-radius: 12px; gap: 0.75rem; }
+    .film-grid { grid-template-columns: 1fr; }
+    .film-category { padding: 1.5rem; }
 }
 @media (max-width: 600px) {
-    header {
-        padding: 3.5rem 1rem;
-    }
-    header h1 {
-        font-size: clamp(2rem, 10vw, 2.8rem);
-    }
-    .header-buttons {
-        top: 15px;
-        right: 15px;
-    }
-    #film-container {
-        padding: 0 1rem;
-    }
-    .modal-content {
-        padding: 1.5rem 1rem;
-        width: 95%;
-        margin: auto;
-    }
-    .movie-card:hover, .fav-btn:hover {
-        transform: none;
-    }
-    #scroll-to-top {
-        width: 40px;
-        height: 40px;
-        font-size: 1rem;
-        bottom: 15px;
-        right: 15px;
-    }
+    body { font-size: 16px; }
+    header { padding: 3rem 1rem; }
+    header h1 { font-size: clamp(2rem, 12vw, 2.5rem); }
+    .header-buttons { top: 15px; right: 15px; }
+    #film-container { padding: 0 1rem; }
+    .modal-content { padding: 1.5rem 1rem; width: calc(100% - 2rem); margin: auto; }
+    .movie-card:hover, .fav-btn:hover, .toolbar-btn:hover, .theme-toggle-btn:hover { transform: none; box-shadow: none; }
+    .toolbar-btn { box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+    .toolbar-btn.secondary { box-shadow: none; }
+    #scroll-to-top { width: 45px; height: 45px; font-size: 1.1rem; bottom: 20px; right: 20px; }
 }
