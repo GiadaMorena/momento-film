@@ -15,12 +15,18 @@ loginForm.addEventListener('submit', (e) => {
 
     errorMessage.textContent = 'Accesso in corso...';
 
-    auth.signInWithEmailAndPassword(email, password)
+    // Imposta la persistenza della sessione per ricordare l'utente
+    auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+        .then(() => {
+            // Ora che la persistenza è impostata, procedi con il login
+            return auth.signInWithEmailAndPassword(email, password);
+        })
         .then((userCredential) => {
             // Login riuscito, reindirizza alla pagina principale
             window.location.href = 'index.html';
         })
         .catch((error) => {
+            // Gestisce gli errori di login
             console.error("Errore di login:", error.code, error.message);
             errorMessage.textContent = "Credenziali non valide. Riprova.";
         });
