@@ -141,12 +141,14 @@ body.light-mode .toast { background-color: var(--light-card); color: var(--light
 @keyframes toastOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(120%); opacity: 0; } }
 
 /* Stili per i Voti di Coppia nel Modale */
-.couple-rating-container { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
+.couple-rating-container { display: flex; justify-content: space-between; align-items: flex-end; gap: 1rem; margin-bottom: 1.5rem; padding: 1rem; background-color: rgba(0,0,0,0.1); border-radius: 8px; }
+body.light-mode .couple-rating-container { background-color: rgba(0,0,0,0.05); }
 .rating-group { flex: 1; text-align: center; }
-.rating-group label { display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
-.affinity-meter { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
-.affinity-meter label { font-size: 0.8rem; color: var(--dark-secondary-text); margin-bottom: 0.5rem; font-weight: bold; }
-#affinity-score { font-family: 'Cinzel', serif; font-size: 2rem; font-weight: 700; color: var(--accent-hover); transition: color 0.4s ease; }
+.rating-group label { display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-bottom: 0.75rem; font-size: 0.9rem; font-weight: 600; }
+.affinity-meter { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 0 1rem; }
+.affinity-meter label { font-size: 0.8rem; color: var(--dark-secondary-text); margin-bottom: 0.5rem; font-weight: bold; text-transform: uppercase; }
+body.light-mode .affinity-meter label { color: var(--light-secondary-text); }
+#affinity-score { font-family: 'Cinzel', serif; font-size: 2.2rem; font-weight: 700; color: var(--accent-hover); transition: color 0.4s ease; line-height: 1; }
 
 @media (max-width: 992px) { .filter-toolbar { flex-wrap: wrap; } }
 @media (max-width: 768px) {
@@ -162,6 +164,8 @@ body.light-mode .toast { background-color: var(--light-card); color: var(--light
     .header-buttons { top: 15px; right: 15px; }
     #film-container { padding: 0 1rem; }
     .modal-content { padding: 1.5rem 1rem; width: calc(100% - 2rem); margin: auto; }
+    .couple-rating-container { flex-direction: column; align-items: stretch; gap: 1.5rem; }
+    .affinity-meter { order: -1; margin-bottom: 1rem; }
     .movie-card:hover, .fav-btn:hover, .toolbar-btn:hover, .theme-toggle-btn:hover { transform: none; box-shadow: none; }
     .toolbar-btn { box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
     .toolbar-btn.secondary { box-shadow: none; }
