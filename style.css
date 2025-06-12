@@ -1,6 +1,3 @@
-/* =================================================================== */
-/* ==   🎨 IMPOSTAZIONI GLOBALI E PALETTE COLORI COMPLETA   == */
-/* =================================================================== */
 :root {
     --dark-bg: #0d1b2a; --dark-card: #1b263b; --dark-primary-text: #e0e1dd; --dark-secondary-text: #a8b2d1;
     --dark-card-stuck: #2a3a50;
@@ -9,6 +6,8 @@
     --magic-purple: #9d4edd; --royal-gold: #fca311; --info-color-rgb: 0, 123, 255;
     --rainbow-gradient: linear-gradient(90deg, #ff6b6b, #feca57, #ff9f43, #1dd1a1, #48dbfb, #c56cf0, #ff6b6b);
 }
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
 body { font-family: 'Lato', sans-serif; margin: 0; background-color: var(--dark-bg); color: var(--dark-primary-text); transition: background-color 0.4s ease-out, color 0.4s ease-out; }
 body.light-mode { background-color: var(--light-bg); color: var(--light-primary-text); }
 @keyframes scaleIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
@@ -28,8 +27,6 @@ body.light-mode .stats-dashboard { background-color: var(--light-card); }
 #stats-completion-percentage { color: var(--magic-purple); }
 .stat-label { font-size: 0.9rem; color: var(--dark-secondary-text); margin-top: 0.5rem; }
 body.light-mode .stat-label { color: var(--light-secondary-text); }
-
-/* --- Sezione Toolbar Ripristinata --- */
 .filter-toolbar { display: flex; align-items: center; gap: 0.8rem; max-width: 1400px; margin: -1rem auto 2rem auto; padding: 1rem; background: var(--dark-card); border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); flex-wrap: nowrap; position: sticky; top: 0; z-index: 1000; transition: background-color 0.3s ease, box-shadow 0.3s ease, padding 0.3s ease, border-radius 0.3s ease; }
 .filter-toolbar.is-stuck { background-color: var(--dark-card-stuck); box-shadow: 0 5px 20px rgba(0,0,0,0.3); padding: 0.8rem 1rem; border-radius: 0 0 10px 10px; }
 body.light-mode .filter-toolbar { background: var(--light-card); }
@@ -39,10 +36,8 @@ body.light-mode .input-wrapper { background-color: var(--light-bg); }
 .input-wrapper i { padding-left: 15px; color: var(--dark-secondary-text); transition: color 0.3s ease; }
 body.light-mode .input-wrapper i { color: var(--light-secondary-text); }
 .input-wrapper:focus-within i { color: var(--accent-color); }
-.filter-toolbar input, .filter-toolbar select { width: 100%; padding: 12px 15px 12px 10px; border: none; background-color: transparent; color: var(--dark-primary-text); font-size: 1rem; -webkit-appearance: none; appearance: none; }
+.filter-toolbar input, .filter-toolbar select { width: 100%; padding: 12px 15px 12px 10px; border: none; background-color: transparent; color: var(--dark-primary-text); font-size: 1rem; -webkit-appearance: none; appearance: none; min-width: 0; }
 body.light-mode .filter-toolbar input, body.light-mode .filter-toolbar select { color: var(--light-primary-text); }
-/* --- Fine Sezione Toolbar Ripristinata --- */
-
 .toolbar-btn { padding: 12px 20px; border: none; border-radius: 25px; cursor: pointer; font-size: 0.9rem; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; transition: transform 0.2s ease, box-shadow 0.2s ease; flex-shrink: 0; white-space: nowrap; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
 .toolbar-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.3); }
 .toolbar-btn:active { transform: translateY(0) scale(0.98); box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
@@ -103,7 +98,7 @@ body.light-mode .modal-content .modal-seen-date { color: var(--light-secondary-t
 .form-group { margin-bottom: 1.2rem; }
 .form-group label { display: block; margin-bottom: 0.5rem; font-weight: bold; font-size: 0.9rem; color: var(--dark-secondary-text); }
 body.light-mode .form-group label { color: var(--light-secondary-text); }
-.modal-content textarea, .modal-content input { width: 100%; padding: 0.75rem; border-radius: 8px; border: 1px solid var(--dark-card-stuck); background-color: var(--dark-bg); color: var(--dark-primary-text); font-size: 1rem; box-sizing: border-box; transition: border-color 0.2s, box-shadow 0.2s; }
+.modal-content textarea, .modal-content input { width: 100%; padding: 0.75rem; border-radius: 8px; border: 1px solid var(--dark-card-stuck); background-color: var(--dark-bg); color: var(--dark-primary-text); font-size: 1rem; transition: border-color 0.2s, box-shadow 0.2s; }
 body.light-mode .modal-content textarea, body.light-mode .modal-content input { background-color: var(--light-bg); color: var(--light-primary-text); border-color: #ced4da; }
 .modal-content textarea:focus, .modal-content input:focus { outline: none; border-color: var(--info-color); box-shadow: 0 0 0 3px rgba(var(--info-color-rgb), 0.4); }
 .close-btn { color: #aaa; position: absolute; top: 15px; right: 20px; font-size: 28px; font-weight: bold; cursor: pointer; transition: color 0.2s, transform 0.2s; }
@@ -143,15 +138,14 @@ body.light-mode .toast { background-color: var(--light-card); color: var(--light
 @keyframes toastOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(120%); opacity: 0; } }
 
 /* =================================================================== */
-/* ==      📱 OTTIMIZZAZIONE RESPONSIVE V2 - A PROVA DI IPHONE      == */
+/* ==      📱 OTTIMIZZAZIONE RESPONSIVE (STABILE)     == */
 /* =================================================================== */
 @media (max-width: 992px) {
     .filter-toolbar { flex-wrap: wrap; }
-    .filter-toolbar .input-wrapper { flex-basis: 250px; }
 }
 @media (max-width: 768px) {
-    .stats-dashboard { grid-template-columns: 1fr; gap: 1.5rem; padding: 1.5rem; }
-    .filter-toolbar { flex-direction: column; align-items: stretch; position: static; border-radius: 12px; gap: 0.75rem; }
+    .stats-dashboard { grid-template-columns: 1fr; gap: 1.5rem; }
+    .filter-toolbar { flex-direction: column; align-items: stretch; position: static; gap: 0.75rem; }
     .film-grid { grid-template-columns: 1fr; }
     .film-category { padding: 1.5rem; }
 }
