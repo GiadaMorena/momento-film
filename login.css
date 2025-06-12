@@ -1,0 +1,45 @@
+:root {
+    --dark-bg: #0d1b2a;
+    --dark-card: #1b263b;
+    --primary-text: #e0e1dd;
+    --secondary-text: #a8b2d1;
+    --accent-color: #ffc107;
+    --magic-purple: #9d4edd;
+    --error-color: #ff6b6b;
+}
+body {
+    margin: 0;
+    font-family: 'Lato', sans-serif;
+    background-color: var(--dark-bg);
+    color: var(--primary-text);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-image: linear-gradient(rgba(13, 27, 42, 0.7), rgba(13, 27, 42, 0.9)), url('images/header-bg.jpg');
+    background-size: cover;
+    background-position: center;
+}
+.login-container { padding: 2rem; }
+.login-box {
+    background-color: var(--dark-card);
+    padding: 2.5rem;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    border: 1px solid var(--magic-purple);
+    max-width: 400px;
+    width: 100%;
+    animation: fadeIn 1s ease-out;
+}
+@keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+.logo-icon { font-size: 3rem; color: var(--magic-purple); margin-bottom: 0.5rem; }
+h1 { font-family: 'Cinzel', serif; margin: 0 0 0.5rem 0; color: var(--accent-color); }
+.login-box p { color: var(--secondary-text); margin-bottom: 2rem; }
+.input-group { margin-bottom: 1.5rem; }
+.input-group input { width: 100%; padding: 12px 15px; border-radius: 8px; border: 1px solid var(--secondary-text); background-color: var(--dark-bg); color: var(--primary-text); font-size: 1rem; box-sizing: border-box; }
+.input-group input:focus { outline: none; border-color: var(--accent-color); box-shadow: 0 0 5px var(--accent-color); }
+.login-btn { width: 100%; padding: 12px; border: none; border-radius: 8px; background-color: var(--magic-purple); color: white; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: transform 0.2s, filter 0.2s; }
+.login-btn:hover { filter: brightness(1.2); }
+.login-btn:active { transform: scale(0.98); }
+.error-message { color: var(--error-color); margin-top: 1rem; height: 1.2em; font-size: 0.9rem; }
